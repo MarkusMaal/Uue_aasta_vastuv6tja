@@ -1,0 +1,989 @@
+<!--
+    uue aasta vastuvõtja 3.1
+    {} markuse tarkvara js
+    
+    client-side code
+    
+    (c) copyright 2021
+    licensed under GNU General Public License v3
+    (GPL3)
+    
+    read COPYING for more information
+-->
+<!DOCTYPE html>
+<html lang="et">
+	<head>
+		<title>Uue aasta vastuvõtja</title>
+		<style>
+            /* theme */
+            /* font, change at your own risk */
+			body {
+				font-family: "Segoe UI";
+				color: #fff;
+			}
+			
+			/* set position for the music break text */
+			div.musicbreak {
+				position: fixed;
+				bottom: 5%;
+				left: 3%;
+			}
+			
+			/* set font size for paragraphs */
+			p {
+				font-size: 11pt;
+			}
+			
+			/* hide underlines from links */
+			a {
+				text-decoration: none;
+				color: #fff;
+			}
+			
+			/* set formatting for headings */
+			h2 {
+				position: absolute;
+				font-weight: normal;
+				padding: 20px;
+			}
+			
+			/* margin setting for song name */
+			h2.sn {
+				margin-left: 2%;	
+			}
+			
+			/* set formatting for upper right text */
+			h2.timestamp {
+				width: 95%;
+				text-align: right;
+			}
+			
+			/* formatting for lower headings */
+			h3 {
+				font-weight: normal;
+				margin-bottom: 0;
+				font-size: 16pt;
+			}
+			h1 {
+				position: absolute;
+				font-weight: normal; font-size: 20px;
+				margin-bottom: 40px;
+			}
+			/* specific formatting for countdown */
+			h1.timetillnewyear {
+				font-size: 70px;
+				margin-bottom: -40px;
+			}
+			/* center the time till next year using flexboxes */
+			.contains {
+				display: flex; justify-content: center; align-items: center;
+				height: 93vh;
+				width: 100%;
+			}
+			/* same for countdown subtitles */
+			.centrum {
+				display: flex; justify-content: center;  align-items: center;
+				width: 99%; text-align: center;
+				margin-top: 200px;
+			}
+			/* midground formatting */
+			.main {
+				background: rgba(0, 0, 0, 0.25);
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				top: 0px;
+				left: 0px;
+			}
+			
+			img.logo {
+				position: absolute;
+				float: right;
+				right: 25px;
+				width: 25%;
+				bottom: 35px;
+				opacity: 0.2;
+				display: {{logodisp}};
+			}
+			img.logo:hover {
+				opacity: 1.0;
+			}
+			/* tables are used when dealing with countdown subtitles */
+			table {
+				margin-left: 10px;
+			}
+			td {
+				padding: 25px; padding-right: 19px;
+			}
+			/* allows the video to be played in the background layer */
+			section[role="banner"] {
+				position: relative;
+				width: 100%;
+			}
+			#wrapper-video {
+				position: fixed;
+				top: -50%;
+				left: -50%;
+				width: 200%;
+				height: 200%;
+				z-index: -100;
+			}
+			#wrapper-video video {
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				margin: auto;
+				min-width: 50%;
+				min-height: 50%;
+			}
+		</style>
+		<script>
+            // define function Date.prototype.currentTime
+			Date.prototype.currentTime = function(){ 
+			return this.getHours()+":" + this.getMinutes() + ":" + this.getSeconds() };
+			// initialize variables
+			// target is the date to which the program counts down to
+			var target = [{{janone[0]}}, {{janone[1]}}];
+			
+			// this whole garbage is just for making sure that
+			// the countdown target is correct
+			
+			/* calculate the day before the target day */
+			var curday = target[0]-1;
+			var curmonth = target[1];
+			//
+			// If day is 0 or lower, go to the last day of
+			// previous month
+			//
+			// e.g. if target is April 1st, the day before
+			// would be March 31st
+			//
+			// This will also take leap years into account,
+			// tough it doesn't take leap leap years and
+			// leap seconds into account (because no)
+			//
+			if (curday < 1) {
+				curmonth--;
+				// wrap over from january to december
+				if (curmonth < 0) {
+					curmonth = 11;
+				}
+				// case #1
+				// the previous month is February
+				if (curmonth == 1) {
+					if (new Date().getFullYear() % 4 == 0) {
+						curday = 29;
+					} else {
+						curday = 28;
+					}
+				// case #2
+				// the previous month is before August and is not February
+				} else if ((curmonth == 0) || ((curmonth > 1) && (curmonth < 7))) {
+					if (curmonth == 0) {
+						curday = 31;
+					} else if (curmonth % 2 == 0) {
+						curday = 30;
+					} else {
+						curday = 31;
+					}
+				// case #3
+				// the previous month is August or later
+				} else {
+					if (curmonth % 2 == 0) {
+						curday = 30;
+					} else {
+						curday = 31;
+					}
+				}
+			}
+			var pretarget = [curday, curmonth];
+			// set which time the clock counts down to
+			//
+			// if the hour is below 24, it will count down
+			// to the time in today
+			//
+			// if set above or equal to 24, it will count
+			// down to the next day
+			var mid = [{{midnight[0]}}, {{midnight[1]}}, {{midnight[2]}}, {{midnight[3]}}];
+			
+			// list of filenames for music
+			var songs = [];
+			
+			// list of filenames for backgrounds
+			var backgrounds = [];
+			
+			// list of song names (generated in jinja)
+			var songnames = [];
+			var announces = [];
+			
+			// list of "fake" clock times when a special event takes place
+			var specialtimes = [];
+			
+			// list of media files to play when a special time is hit
+			var specialactions = [];
+			
+			// list of messages displayed at the top left
+			// (e.g. title of the media file)
+			var specialmessages = [];
+			
+			// since computers are stupid, this list has a bunch
+			// of strings that tell if a specialaction is
+			// actually a video (true = video; background = video,
+			// display as background image; false = audio)
+			var specialvideos = [];
+			
+			// this list contains backgrounds that are displayed
+			// when a special event starts (audio)
+			// (new feature in 3.1)
+			var specialbackgrounds = [];
+			
+			// list of played music
+			var playedmusic = [];
+			var plays = 0;
+			
+			// play special event?
+			var playspecial = false;
+			
+			// is it new year already?
+			var newyear = false;
+			
+			// announcement ID (the middle text displayed above the countdown)
+			var an_id = 0;
+			
+			// maximum volume (this is not the current volume, but rather
+			// the maximum that the user has chosen, default is 1.0 i.e. 100%)
+			var maxvolume = 1.0;
+			
+			// list of information messages (top left corner, marked with an information symbol)
+			var msgs = [];
+			// list of information message trigger times
+			var msgds = [];
+			
+			// current song ID
+			var nw;
+			
+			// tell the script if the video being played is a background or not
+			var is_bg = false;
+			
+			/* generated special event references */{% for msgd, msg in msgs %}
+			msgs[{{loop.index-1}}] = "{{msg}}";
+			msgds[{{loop.index-1}}] = new Date();
+			msgds[{{loop.index-1}}].setHours("{{msgd[0]}}");
+			msgds[{{loop.index-1}}].setMinutes("{{msgd[1]}}");
+			msgds[{{loop.index-1}}].setSeconds("{{msgd[2]}}");
+			msgds[{{loop.index-1}}].setMilliseconds("{{msgd[3]}}");{% endfor %}{% for sptime, spvid, spact, spmsg, spimg in special %}
+
+			specialtimes[{{loop.index-1}}] = new Date();
+			specialtimes[{{loop.index-1}}].setHours("{{sptime[0]}}");
+			specialtimes[{{loop.index-1}}].setMinutes("{{sptime[1]}}");
+			specialtimes[{{loop.index-1}}].setSeconds("{{sptime[2]}}");
+			specialtimes[{{loop.index-1}}].setMilliseconds("{{sptime[3]}}");
+			specialvideos[{{loop.index-1}}] = "{{spvid}}";
+			specialactions[{{loop.index-1}}] = "{{spact}}";
+			specialbackgrounds[{{loop.index-1}}] = "{{spimg}}";
+			specialmessages[{{loop.index-1}}] = "{{spmsg}}";{% endfor %}
+			/* generated song references */{% for file, meta in songs %}
+			songs[{{loop.index-1}}] = "media/songs/{{file}}";
+			songnames[{{loop.index-1}}] = "{{meta}}";{% endfor %}
+			var songcount = {{nsong}};
+			songnames[songnames.length + 1] = "";
+			/* generated background image references */{% for file in backgrounds %}
+			backgrounds[{{loop.index-1}}] = "media/backgrounds/{{file}}";{% endfor %}
+			var numberOfImages = {{nimg}};
+			var curImgId = Math.floor(Math.random() * numberOfImages);
+		</script>
+	</head>
+	<body>
+		<!-- teh front end HTML -->
+		<div class="main">
+		<h2 id="songname" class="sn">Vajutage P, et anda luba multimeedia esitamiseks</h2>
+		<h2 id="ctime" class="timestamp"></h2>
+		<div class="contains">
+		<h1 id="announcement">{{towhat}} on jäänud</h1>
+		<h1 id="countdown" class="timetillnewyear"></h1>
+		<table class="centrum">
+		<tr>
+		<td id="ui_days">päeva</td>
+		<td id="ui_hours">tundi</td>
+		<td id="ui_minutes">minutit</td>
+		<td id="ui_seconds">sekundit</td>
+		</tr>
+		</table>
+		</div>
+		<a href="#" onclick='document.getElementById("permission").style.display = "none";' id="permission" style="{{permission}}"></a>
+		<audio id="music" src="">
+		</audio>
+		<div id="wrapper-video">
+		<video id="myvideo" src="">
+		</video>
+		</div>
+		<div class="musicbreak" id="musicbreak">
+			<h3 id="breaktitle">{{itt}}</h3>
+			<p id="breakdetails" style="width: 50%;">{{it}}</p>
+		</div>
+		<!-- custom logo -->
+		<img class="logo" src="media/{{logofile}}">
+		<!-- end of teh front end HTML -->
+		
+		<script>
+			// mute and pause audio (this gets executed right after the page is loaded by the
+			// browser)
+			document.getElementById("music").volume = 0;
+			document.getElementById("music").pause();
+			// set event listener as the myHandler function
+			// this makes sure that when the video ends, everything gets restored
+			// back to normal
+			document.getElementById('myvideo').addEventListener('ended',myHandler,false);
+			
+			// this function makes sure the integer is in 2 digit format
+			function GetTwoDigit(no) {
+				if (Number(no) < 10) {
+					return "0" + no;
+				} else {
+					return no;
+				}
+			}
+			
+			function ShowHideAll(show) {
+				var stype = "hidden";
+				if (show) {
+					if (playspecial && !is_bg) {
+						// this makes sure that if the special programme is a video, the gradient effect gets displayed
+						// when turning on the UI
+						if (document.getElementById("ui_days").innerHTML == "")
+						{
+							document.getElementsByClassName("main")[0].style.background = "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))";
+						}
+					} else {
+						document.getElementsByClassName("main")[0].style.background = "rgba(0, 0, 0, 0.25)";
+					}
+					stype = "visible";
+				} else {
+					document.getElementsByClassName("main")[0].style.background = "transparent";
+				}
+				document.getElementById("songname").style.visibility = stype;
+				document.getElementById("ctime").style.visibility = stype;
+				document.getElementById("breakdetails").style.visibility = stype;
+				document.getElementById("breaktitle").style.visibility = stype;
+				document.getElementById("announcement").style.visibility = stype;
+				document.getElementById("countdown").style.visibility = stype;
+				document.getElementsByClassName("logo")[0].style.visibility = stype;
+				document.getElementsByClassName("centrum")[0].style.visibility = stype;
+			}
+			// restore normal music break state
+			// this function is triggered when exiting special events, such as
+			// special audio and video clips
+			function myHandler(e) {
+					if (playspecial) {
+							playspecial = false;
+					}
+					clearInterval(timer3);
+					timer3 = setInterval(topright, 50);
+					document.getElementById("songname").innerHTML = "<span style='color: #5555AB'>♫</span> " + songnames[nw];
+					document.getElementById("musicbreak").style.display = "block";
+					document.getElementsByTagName("video")[0].style.background = "transparent";
+					document.getElementById('myvideo').src = "";
+					document.getElementById('myvideo').currentTime = 0;
+                    document.getElementsByClassName("main")[0].style.background = "rgba(0, 0, 0, 0.25)";
+                    document.getElementsByClassName("main")[0].style.height = "100%";
+					document.getElementsByTagName('body')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
+					document.getElementsByTagName('body')[0].style.backgroundSize = 'cover';
+			}
+			// set background image
+			document.getElementsByTagName('body')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
+			document.getElementsByTagName('body')[0].style.backgroundSize = 'cover';
+			
+			// display black translucent background if no special events are triggered
+			// also switch the background image every minute (change 60 to something else
+			// to change the interval)
+			window.setInterval(function() {
+				if (playspecial == false) {
+					document.getElementsByTagName('body')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
+					document.getElementsByTagName('body')[0].style.backgroundSize = 'cover';
+				}
+				curImgId = Math.floor(Math.random() * numberOfImages);
+			}, 60 * 1000);
+			// display special messages if the time is correct
+			// show the song name if the message is set to an asterisk
+			window.setInterval(function() {
+				var midnight = new Date();
+				midnight.setHours( mid[0] );
+				midnight.setMinutes( mid[1] );
+				midnight.setSeconds( mid[2] );
+				midnight.setMilliseconds( mid[3] );
+				
+				// subtract current time from January 1st next year
+				// do this for hours, minutes, and seconds
+				var hours = Math.floor((midnight.getTime() - new Date().getTime() ) / 1000 / 60 / 60);
+				var mins = Math.floor(((midnight.getTime() - new Date().getTime() ) / 1000 / 60) - (hours * 60));
+				var secs = Math.floor(((midnight.getTime() - new Date().getTime() ) / 1000) - (hours * 60 * 60) - (mins * 60));
+				
+                ctime = new Date();
+                ctime.setHours(23-hours);
+                ctime.setMinutes(59-mins);
+                ctime.setSeconds(59-secs);
+                for (var i = 0; i < msgds.length; i++) {
+                    if (ctime.currentTime() == msgds[i].currentTime()) {
+						switch (msgs[i]) {
+							case "*[":
+								ShowHideAll(false);
+								break;
+							case "*]":
+								ShowHideAll(true);
+								break;
+							case "*":
+								document.getElementById("songname").innerHTML = "<span style='color: #5555AB'>♫</span> " + songnames[nw];
+								break;
+							default:
+								document.getElementById("songname").innerHTML = "<span style='color: #3EB3F3'>&#128712;</span> " + msgs[i];
+								break;
+						}
+                    }
+                }
+                if (document.getElementById("breaktitle").innerHTML == "Testimisrežiim") {
+					document.getElementById("breakdetails").innerHTML = "Võltskellaaeg: " + ctime.currentTime();
+				}
+			}, 500);
+			// switch idle texts every 30 seconds
+			window.setInterval(function() {
+				var amsg = document.getElementById("announcement").innerHTML;
+				if (document.getElementById("myvideo").paused || is_bg) {
+					if (!newyear) {
+						if (amsg == "{{towhat}} on jäänud") {
+							switch (an_id) {
+								case 0:
+									var nextyear = new Date().getFullYear() + 1;
+									document.getElementById("announcement").innerHTML = "Järgmine aasta on " + nextyear;
+									break;
+								case 1:
+									document.getElementById("announcement").innerHTML = "Järgmine taustapilt on  " + backgrounds[curImgId].replace("media/backgrounds/", "").replace(".jpg", "").replace(".jpeg" ,"").replace(".jpe", "");
+									break;
+								case 2:
+									document.getElementById("announcement").innerHTML = "Praegu on saadaval " + songcount + " muusikapala";
+									break;
+								case 3:
+									document.getElementById("announcement").innerHTML = "Praegu on saadaval " + numberOfImages + " taustapilti";
+									break;
+								case 4:
+									document.getElementById("announcement").innerHTML = "{{idletext[0]}}";
+									break;
+								case 5:
+									document.getElementById("announcement").innerHTML = "{{idletext[1]}}";
+									break;
+								case 6:
+									document.getElementById("announcement").innerHTML = "{{idletext[2]}}";
+									break;
+								case 7:
+									document.getElementById("announcement").innerHTML = "{{idletext[3]}}";
+									break;
+								case 8:
+									document.getElementById("announcement").innerHTML = "{{idletext[4]}}";
+									break;
+								case 9:
+									document.getElementById("announcement").innerHTML = "{{idletext[5]}}";
+									break;
+								case 10:
+									document.getElementById("announcement").innerHTML = "{{idletext[6]}}";
+									break;
+								case 11:
+									document.getElementById("announcement").innerHTML = "{{idletext[7]}}";
+									an_id = -1;
+									break;
+							}
+							an_id = Math.floor(Math.random() * 11);
+						} else {
+							document.getElementById("announcement").innerHTML = "{{towhat}} on jäänud";
+						}
+					}
+				}
+			}, 30000);
+			
+			// clock update function
+			window.setInterval(function() {
+                // define media player
+				player = document.getElementById("music");
+                // get current date
+				today = new Date();
+				// define video player
+				vid = document.getElementById("myvideo");
+				// check special events if the date is Dec 31st or Jan 1st
+				if (((today.getDate() == pretarget[0]) || (today.getDate() == target[0])) && ((today.getMonth() == pretarget[1]) || (today.getMonth() == target[1]))) {
+                    // cycle through special events and see if any match current time
+					for (var i = 0; i < specialtimes.length; i++) {
+						var midnight = new Date();
+						midnight.setHours( mid[0] );
+						midnight.setMinutes( mid[1] );
+						midnight.setSeconds( mid[2] );
+						midnight.setMilliseconds( mid[3] );
+						
+						// subtract current time from January 1st next year
+						// do this for hours, minutes, and seconds
+						var hours = Math.floor((midnight.getTime() - new Date().getTime() ) / 1000 / 60 / 60);
+						var mins = Math.floor(((midnight.getTime() - new Date().getTime() ) / 1000 / 60) - (hours * 60));
+						var secs = Math.floor(((midnight.getTime() - new Date().getTime() ) / 1000) - (hours * 60 * 60) - (mins * 60));
+						
+						ctime = new Date();
+						ctime.setHours(23-hours);
+						ctime.setMinutes(59-mins);
+						ctime.setSeconds(59-secs);
+						if (ctime.currentTime() == specialtimes[i].currentTime()) {
+                            // check if the special event action is a video
+							if (specialvideos[i] != "false") {
+                                // in case it is a video...
+                                // set specific style required by video mode, unless specialvideos is
+								// set to background, in which case the don't do anything and just
+								// play the fricking video (three asterisks in specialevents.txt)
+								is_bg = (specialvideos[i] == "background");
+                                if (specialvideos[i] != "background")
+                                {
+									clearInterval(timer3);
+									timer3 = setInterval(topright, 12);
+                                    document.getElementsByClassName("main")[0].style.background = "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))";
+                                    document.getElementsByClassName("main")[0].style.height = "25%";
+                                }
+                                // point to the video from the schedule
+								vid.src = "media/special/videos/" + specialactions[i];
+								// set body background to black
+								document.getElementsByTagName('body')[0].style.background = 'black';
+								// play the video file
+								vid.play();
+							} else {
+                                // in this case the event is an audio track
+                                // first disable background overlay
+                                document.getElementsByClassName("main")[0].style.background = "rgba(0, 0, 0, 0)";
+                                // then go to the beginning of the music track, reset the source
+                                // and point the new source to the special event
+								player.currentTime = 0;
+								player.src = "";
+								player.src = "media/special/" + specialactions[i];
+								// show special background
+								document.getElementsByTagName('body')[0].style.background = 'url(media/special/' + specialbackgrounds[i] + ') no-repeat center center fixed #6A00FF';
+								document.getElementsByTagName('body')[0].style.backgroundSize = 'cover';
+								// play the audio file
+								player.play();
+							}
+                            // reset music volume (if it was fading in, max the volume)
+                            document.getElementById("music").volume = 1;
+                            // hide music break message
+                            document.getElementById("musicbreak").style.display = "none";
+                            // display special message in place of the song name
+							document.getElementById("songname").innerHTML = "<span style='color: lime'>&#9654;</span> " + specialmessages[i];
+							// let the rest of the code know that a special event is happening
+							playspecial = true;
+						}
+					}
+				}
+				// execute this code if the user has given permission to play media
+				if ((document.getElementById("permission").style.display == "none")) {
+					if (player.paused) {
+                            // check if special event is triggered or if a video is playing
+                            // if not, set style required for regular music breaks
+							if (playspecial == true) {
+								if (vid.paused) {
+									document.getElementsByTagName('body')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
+									document.getElementsByTagName('body')[0].style.backgroundSize = 'cover';
+									document.getElementById("musicbreak").style.display = "block";
+									playspecial = false;
+                                    document.getElementsByClassName("main")[0].style.background = "rgba(0, 0, 0, 0.25)";
+								}
+							}
+							// reset current track, set source to none
+							player.currentTime = 0;
+							player.src = "";
+							// repeat shuffle feature
+							// set played playlist to previous song, advance the play count
+							playedmusic[plays] = songs[nw];
+							plays++;
+							// reset the playlist history if playlist history is as long as the
+							// actual playlist
+							if (plays >= songs.length - 4) {
+                                playedmusic = [];
+                                plays = 0;
+                                document.getElementById("songname").innerHTML = "Esitusajalugu nulliti";
+                                player.currentTime = 0;
+                                player.src = "";
+							}
+							// select a random song until we get one that hasn't been played yet
+							while (playedmusic.includes(songs[nw])) {
+                                nw = Math.floor(Math.random() * songcount);
+                            }
+                            // play song, display metadata on screen
+							player.src = songs[nw];
+							if (document.getElementById("myvideo").paused || is_bg) {
+								document.getElementById("songname").innerHTML = "<span style='color: #5555AB'>♫</span> " + songnames[nw];
+							}
+							player.play();
+					}
+				}
+			}, 500);
+			// keydown event listener
+			document.addEventListener('keydown', function(event) {
+                switch (event.keyCode) {
+                    case 115:
+                        playedmusic = [];
+                        plays = 0;
+                        document.getElementById("songname").innerHTML = "Esitusajalugu nulliti";
+                            player.currentTime = 0;
+                        player.src = "";
+                        break;
+					
+                    case 101:
+						ShowHideAll(false);
+						break;
+                    case 100:
+						ShowHideAll(true);
+						break;
+					// if NumPad3 is pressed, play a test video for debugging purposes
+                    case 99:
+                        if (!playspecial) {
+                            vid.src = "media/special/videos/ertAasta2011.webm";
+                            vid.play();
+							is_bg = false;
+                            //player.currentTime = 0;
+                            //player.src = "";
+                            //document.getElementById("music").volume = 0;
+                            document.getElementById("musicbreak").style.display = "none";
+                            document.getElementsByClassName("main")[0].style.background = "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))";
+                            document.getElementsByClassName("main")[0].style.height = "25%";
+                            document.getElementById("songname").innerHTML = "<span style=\"color: yellow\">/// SERVICE TEST </span><span style=\"color: red\">VER 0.02</span><span style=\"color: yellow\"> ///</span>";
+                            document.getElementById('main').style.backgroundSize = 'contain';
+                            clearInterval(timer3);
+							timer3 = setInterval(topright, 12);
+                            playspecial = true;
+                        } else {
+                            vid.src = "";
+                            vid.currentTime = 0;
+                            document.getElementById("songname").innerHTML = "<span style='color: #5555AB'>♫</span> " + songnames[nw];
+                            vid.pause();
+                        }
+                        break;
+                    // if NumPad2 is pressed, play a test video as background for debugging purposes
+					case 98:
+                        if (!playspecial) {
+                            vid.src = "media/special/videos/fireworks.webm";
+                            vid.play();
+							is_bg = true;
+                            document.getElementById("musicbreak").style.display = "none";
+                            playspecial = true;
+                        } else {
+                            vid.src = "";
+                            vid.currentTime = 0;
+							is_bg = false;
+                            document.getElementById("songname").innerHTML = "<span style='color: #5555AB'>♫</span> " + songnames[nw];
+                            vid.pause();
+                        }
+                        break;
+                    // if NumPad1 is pressed, play a test video for debugging purposes
+                    case 97:
+                        if (!playspecial) {
+                            vid.src = "media/special/videos/welcome.webm";
+                            vid.play();
+							is_bg = false;
+                            //player.currentTime = 0;
+                            //player.src = "";
+                            //document.getElementById("music").volume = 0;
+                            document.getElementById("musicbreak").style.display = "none";
+                            document.getElementsByClassName("main")[0].style.background = "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))";
+                            document.getElementsByClassName("main")[0].style.height = "25%";
+                            document.getElementById("songname").innerHTML = "<span style=\"color: yellow\">/// SERVICE TEST </span><span style=\"color: red\">VER 0.02</span><span style=\"color: yellow\"> ///</span>";
+                            document.getElementById('main').style.backgroundSize = 'contain';
+                            clearInterval(timer3);
+							timer3 = setInterval(topright, 12);
+                            playspecial = true;
+                        } else {
+                            vid.src = "";
+                            vid.currentTime = 0;
+                            document.getElementById("songname").innerHTML = "<span style='color: #5555AB'>♫</span> " + songnames[nw];
+                            vid.pause();
+                        }
+                        break;
+                    // if NumPad0 is pressed, play a test audio track for debugging purposes
+                    case 96:
+                        if (!playspecial) {
+                            player.currentTime = 0;
+                            player.src = "";
+                            player.src = "media/special/PRG_000.mp3";
+                            document.getElementById("music").volume = 0;
+                            document.getElementsByTagName('body')[0].style.background = 'url(media/special/special.png) no-repeat center center fixed #6A00FF';
+							document.getElementsByTagName('body')[0].style.backgroundSize = 'cover';
+                            document.getElementById("musicbreak").style.display = "none";
+                            document.getElementsByClassName("main")[0].style.background = "rgba(0, 0, 0, 0)";
+                            document.getElementById("songname").innerHTML = "<span style=\"color: yellow\">/// SERVICE TEST </span><span style=\"color: red\">VER 0.02</span><span style=\"color: yellow\"> ///</span>";
+                            playspecial = true;
+							is_bg = false;
+                            clearInterval(timer3);
+							timer3 = setInterval(topright, 50);
+                            player.play();
+                        } else {
+                            playspecial = false;
+                            player.currentTime = 0;
+                            player.src = "";
+                            document.getElementById("music").volume = 0;
+                            player.paused = true;
+                            document.getElementById("songname").innerHTML = "<span style=\"color: yellow\">/// EXIT SERVICE TEST ///</span>";
+                            document.getElementById("musicbreak").style.display = "block";
+                            document.getElementsByTagName('body')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
+							document.getElementsByTagName('body')[0].style.backgroundSize = 'cover';
+                            
+                        }
+                        break;
+                    // if P is pressed, give permission to play media
+                    case 80:
+                        document.getElementById("permission").style.display = "none";
+                        break;
+                    // if ArrowDown is pressed, decrease the max volume
+                    case 40:
+                        maxvolume -= 0.1;
+                        if (maxvolume < 0) {
+                            maxvolume = 0;
+                        }
+                        player.volume = maxvolume;
+                        break;
+                    // if ArrowRight is pressed, play next track
+                    case 39:
+                        player.volume = 0;
+                        player.src = "";
+                        player.currentTime = 0;
+                        break;
+                    // if ArrowUp is pressed, increase the max volume
+                    case 38:
+                        maxvolume += 0.1;
+                        if (maxvolume > 1) {
+                            maxvolume = 1;
+                        }
+                        player.volume = maxvolume;
+                        break;
+                    // if ArrowLeft is pressed, play previous track (using playlist history)
+                    case 37:
+                        for (var i = 0; i < songnames.length; i++) {
+                            if (songs[i] == playedmusic[plays-1]) {
+                                document.getElementById("songname").innerHTML = "<span style='color: #5555AB'>♫</span> " + songnames[i];
+                            }
+                        }
+                        var backup = playedmusic[plays-1]
+                        playedmusic[plays-1] = "";
+                        plays -= 1;
+                        player.volume = 0;
+                        player.currentTime = 0;
+                        player.src = backup;
+                        player.play();
+                        break;
+                }
+            });
+			var timer3 = setInterval(topright, 50);
+			
+			function topright() {
+				var nyear, today, bday, diff, days;
+				// define month and day for new year
+				today = new Date();
+				bday = new Date(today.getFullYear(),target[1],target[0]);
+				if( today.getTime() > bday.getTime()) {
+					bday.setFullYear(bday.getFullYear()+1);
+				}
+				diff = bday.getTime()-today.getTime();
+				// calculate days till next year
+				days = Math.floor(diff/(1000*60*60*24));
+				// define midnight
+				var midnight = new Date();
+				midnight.setHours( mid[0] );
+				midnight.setMinutes( mid[1] );
+				midnight.setSeconds( mid[2] );
+				midnight.setMilliseconds( mid[3] );
+				// current hour
+				var ch = new Date().getHours();
+				// current date
+				var cdate = GetTwoDigit(new Date().getDate()) + "." + GetTwoDigit(new Date().getMonth() + 1) + "." + new Date().getFullYear();
+				
+				// subtract current time from January 1st next year
+				// do this for hours, minutes, and seconds
+				var hours = Math.floor((midnight.getTime() - new Date().getTime() ) / 1000 / 60 / 60);
+				var mins = Math.floor(((midnight.getTime() - new Date().getTime() ) / 1000 / 60) - (hours * 60));
+				var secs = Math.floor(((midnight.getTime() - new Date().getTime() ) / 1000) - (hours * 60 * 60) - (mins * 60));
+				
+				// check if it's January 1st
+				// if so, hide the countdown and say happy new year
+				if (((new Date().getMonth() == target[1]) && (new Date().getDate() == target[0])) || (hours < 0)) {
+					newyear = true;
+					document.getElementById("announcement").innerHTML = "{{tagline}}";
+					document.getElementById("countdown").innerHTML = "{{subtag}}";
+					document.getElementById("ui_seconds").style.display = "none";
+					document.getElementById("ui_minutes").style.display = "none";
+					document.getElementById("ui_hours").style.display = "none";
+					document.getElementById("ui_days").style.display = "none";
+				}
+				// get current position in song
+				playtime = document.getElementById("music").currentTime;
+				// get song duration
+				playtotal = document.getElementById("music").duration;
+				// get current position in video
+				vidtime = document.getElementById("myvideo").currentTime;
+				// get video duration
+				vidtotal = document.getElementById("myvideo").duration;
+				// fade out music/audio if video is playing, unless it's a background video
+					if ((playtotal - playtime < 13) || ((!document.getElementById('myvideo').paused) && (!is_bg))) {
+						clearInterval(timer3);
+						timer3 = setInterval(topright, 50);
+						if ((document.getElementById("music").volume > 0)) {
+							try {
+								if (document.getElementById('myvideo').paused || is_bg) {
+									document.getElementById("music").volume -= 0.00495;
+								} else {
+									document.getElementById("music").volume -= 0.1;
+								}
+							} catch {
+								document.getElementById("music").volume = 0;
+							}
+						} else {
+							clearInterval(timer3);
+							timer3 = setInterval(topright, 500);
+						}
+					} else {
+						// fade in music/audio if no video is playing
+						if ((document.getElementById('myvideo').paused) || (is_bg)) {
+							if (document.getElementById("permission").style.display == "none") {
+								if (document.getElementById("music").volume < maxvolume) {
+									clearInterval(timer3);
+									timer3 = setInterval(topright, 50);
+									try {
+										document.getElementById("music").volume += 0.00495;
+									} catch  {
+										document.getElementById("music").volume = maxvolume;
+									}
+								} else {
+									clearInterval(timer3);
+									timer3 = setInterval(topright, 500);
+								}
+							}
+						}
+					}
+				// make volume string that will be displayed in upper right corner of the screen
+				volume = String(Math.floor(document.getElementById("music").volume * 100)) + "%";
+				playmins = Math.floor(playtime / 60);
+				if (playmins < 10) { playmins = "0" + playmins; }
+				playsecs = Math.floor(playtime - playmins * 60);
+				if (playsecs < 10) { playsecs = "0" + playsecs; }
+				totalmins = Math.floor(playtotal / 60);
+				if (totalmins < 10) { totalmins = "0" + totalmins; }
+				totalsecs = Math.floor(playtotal - totalmins * 60);
+				if (totalsecs < 10) { totalsecs = "0" + totalsecs; }
+				fulltime = "00:00 / 00:00";
+				// check to make sure totalmins is not NaN
+				// in case it is, use the default value
+				if (totalmins === totalmins) {
+					fulltime = playmins + ":" + playsecs + " / " + totalmins + ":" + totalsecs;
+				}
+				var vidmins = Math.floor(vidtime / 60);
+				if (vidmins < 10) { vidmins = "0" + vidmins; }
+				var vidsecs = Math.floor(vidtime - vidmins * 60);
+				if (vidsecs < 10) { vidsecs = "0" + vidsecs; }
+				var tvidmins = Math.floor(vidtotal / 60);
+				if (tvidmins < 10) { tvidmins = "0" + tvidmins; }
+				var tvidsecs = Math.floor(vidtotal - tvidmins * 60);
+				if (tvidsecs < 10) { tvidsecs = "0" + tvidsecs; }
+				var fullvideotime = "00:00 / 00:00";
+				if (tvidmins === tvidmins) {
+					fullvideotime = vidmins + ":" + vidsecs + " / " + tvidmins + ":" + tvidsecs;
+				}
+				if (ch < 10) { ch = "0" + ch; }
+				var cm = Math.floor((new Date().getMinutes()));
+				if (cm < 10) { cm = "0" + cm; }
+				var cs = Math.floor((new Date().getSeconds()));
+				if (cs < 10) { cs = "0" + cs; }
+				// if not new year, calculate time remaining till the next year
+				if (newyear == false) {
+					var shrs, smins, ssecs;
+					// if any counters are below 10, add a "0" prefix
+					if (hours < 10) {
+						shrs = "0" + String(hours);
+					} else {
+						shrs = String(hours)
+					}
+					if (mins < 10) {
+						smins = "0" + String(mins);
+					} else {
+						smins = String(mins)
+					}
+					if (secs < 10) {
+						ssecs = "0" + String(secs);
+					} else {
+						ssecs = String(secs)
+					}
+					if (days < 10) {
+						days = "0" + days;
+					}
+					
+                    // adjust margins if remaining days > 99
+                    if (Number(days) > 99) {
+						document.getElementById("ui_days").style = "padding: 40px;";
+						document.getElementById("ui_minutes").style = "padding-left: 32px;";
+					} else {
+						document.getElementById("ui_days").style = "padding: 25px;";
+						document.getElementById("ui_minutes").style = "padding-left: 25px;";
+					}
+					// set text below counters
+                    document.getElementById("ui_minutes").innerHTML = "minutit";
+                    document.getElementById("ui_hours").innerHTML = "tundi";
+                    document.getElementById("ui_days").innerHTML = "päeva";
+                    document.getElementById("ui_seconds").innerHTML = "sekundit";
+                    // if any counter is one, set the text below to be singular
+					if (days == "01") {
+                        document.getElementById("ui_days").innerHTML = "päev";
+					}
+					if (smins == "01") {
+                        document.getElementById("ui_minutes").innerHTML = "minut";
+					}
+					if (shrs == "01") {
+                        document.getElementById("ui_hours").innerHTML = "tund";
+					}
+					if (ssecs == "01") {
+                        document.getElementById("ui_seconds").innerHTML = "sekund";
+					}
+					// hide certain counters if they are "00"
+					// adjust margins if neccesary
+					if (days == "00") {
+						document.getElementById("countdown").innerHTML = shrs + " " + smins + " " + ssecs;
+						if (shrs == "00") {
+							document.getElementsByTagName("table")[0].style.marginLeft = 0;
+							document.getElementById("countdown").innerHTML = smins + " " + ssecs;
+							if (smins == "00") {
+								document.getElementById("countdown").innerHTML = ssecs;
+								document.getElementById("ui_minutes").style.display = "none";
+							}
+							document.getElementById("ui_hours").style.display = "none";
+						}
+						document.getElementById("ui_days").style.display = "none";
+					} else {
+						// display all counters if nothing is "00"
+						document.getElementById("countdown").innerHTML = days + " " + shrs + " " + smins + " " + ssecs;
+					}
+				}
+				if (document.getElementById("myvideo").paused || is_bg) {
+                    document.getElementById("ctime").innerHTML = cdate + " " + ch + ":" + cm + ":" + cs + " | " + volume + " | " + fulltime ;
+					// set certain text fields to have values if they are empty
+					if (document.getElementById("announcement").innerHTML == "") {
+						document.getElementById("announcement").innerHTML = "{{towhat}} on jäänud";
+					}
+					if (document.getElementById("ui_seconds").innerHTML == "") {
+						document.getElementById("ui_days").innerHTML = "päeva";
+						document.getElementById("ui_seconds").innerHTML = "sekundit";
+						document.getElementById("ui_minutes").innerHTML = "minutit";
+						document.getElementById("ui_hours").innerHTML = "tundi";
+					}
+				} else {
+					// set layout if special video programme is played
+					document.getElementById("ctime").innerHTML = cdate + " " + ch + ":" + cm + ":" + cs + " | Eriprogramm | " + fullvideotime;
+					document.getElementById("announcement").innerHTML = "";
+					document.getElementById("countdown").innerHTML = "";
+					document.getElementById("ui_days").innerHTML = "";
+					document.getElementById("ui_seconds").innerHTML = "";
+					document.getElementById("ui_minutes").innerHTML = "";
+					document.getElementById("ui_hours").innerHTML = "";
+					document.getElementById("musicbreak").style.display = "none";
+					document.getElementsByTagName('body')[0].style.backgroundSize = 'contain';
+				}
+			}
+		</script>
+	</body>
+</html>

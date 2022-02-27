@@ -1,0 +1,678 @@
+ 
+ 
+Uue aasta vastuvõtja 3.1
+{} markuse tarkvara
+
+Tarkvarale kehtib GPLv3 litsents, mis võimaldab teil
+redigeerida ja edasi arendada tarkvara koodi ning luua
+selle baasil sama litsentsiga uusi projekte. Avage fail
+"LICENSE" tekstivaaturis täpsema info jaoks.
+
+
+                  ---  Kasutusjuhend  ---
+
+***********************************************************
+Sisukord
+***********************************************************
+a) Sisukord
+b) Toetatud failiformaadid
+c) Uue aasta vastuvõtu planeerimine
+		1. Muusikapalade lisamine
+		2. Taustade lisamine
+		3. Eriprogrammide lisamine
+		4. Tekst-teadete lisamine
+		5. Juhuslikustamine
+		6. Video esitamine taustapildina muusika taustal
+		7. Liidese peitmine/kuvamine
+d) Programmi käivitamine ja kasutamine
+		1. Ettevalmistused
+		2. Serveri käivitamine
+		3. Esimene käivitus
+		4. Küljendus
+		5. Kiirklahvid
+		6. Testimine
+		7. OBS studio allika lisamine
+e) Konfiguratsioonifaili redigeerimine
+		1. Tegevuseta kuvatavate tekstide muutmine
+		2. Sihtkuupäeva ja -kellaaja muutmine
+		3. Taimeri tüübi muutmine ja sünnipäevarežiimi seadistamine
+		4. Vesimärgi seadistamine
+		5. Informatsiooni tekst
+		6. Serveri konfiguratsioon
+
+***********************************************************
+Toetatud failiformaadid:
+***********************************************************
+Uue aasta vastuvõtja toetab järgmisi failiformaate:
+	- Heli: MP3
+	- Pildid: JPEG, PNG, SVG, GIF, WEBP
+	- Video: WEBM, MP4
+
+Kui fail ei ole toetatud formaadis, siis ei saa uue aasta
+vastuvõtja seda esitada.
+
+
+***********************************************************
+Uue aasta vastuvõtu planeerimine
+***********************************************************
+Laadides alla uue aasta vastuvõtja, näete te järgmist
+failistruktuuri:
+
+	- errors <kaust>
+		- 403.html <veateade>
+		- 404.html <veateade>
+	- media <kaust>
+		- backgrounds <kaust>
+		- songs <kaust>
+			- <näidispalad>
+			- ZZDUMMY[1-5].mp3 <tühjad täitepalad, võite kustutada pärast muusikapalade lisamist>
+		- special <kaust>
+			- videos <kaust>
+				- countdown.webm <viimaste sekundite loendamine>
+				- fireworks.webm <ilutulestik>
+				- welcome.webm <tervitusvideo>
+			- PRG_000.mp3 <testimiseks>
+			- PRG_CDN.mp3 <uue aasta vastu võtmiseks>
+			- PRG_FFF.mp3 <ootamismuusika>
+			- endstream.png
+			- fireworks.gif
+			- prepare.png
+			- special.png
+			- stopfail.png
+			- uav.png
+		- jsoftware.png <vesimärk>
+		- specialevents.txt
+		- specialmessages.txt
+		- stream_margins.css
+	- LICENSE <litsents>
+	- favicon.ico
+	- Kasutusjuhend.txt
+	- pyserver.py
+	- reference.html
+
+...........................................................
+
+1. Muusikapalade lisamine
+
+Muusikapalade lisamiseks kopeerige soovitud mp3 failid
+järgmisesse kausta:
+	[ media -> songs ]
+
+Programm tuvastab automaatselt lisatud muusikapalad
+
+NB: Juhul kui teie esitusloendis on vähem kui 6 muusikapala,
+peate alles hoidma failid "ZZDUMMY1.mp3 - ZZDUMMY5.mp3".s
+Vastasel korral käivitatakse alati tühi pala, mida ei
+eksisteeri.
+
+Kui teie esitusloendis on rohkem palasid, võite need failid
+kustutada (sellisel juhul on see ka tungivalt soovitatav.
+
+...........................................................
+
+2. Taustade lisamine
+
+Taustade lisamiseks, kopeerige soovitud JPEG, PNG, WEBP
+või SVG failid järgmisesse kausta:
+	[ media -> backgrounds ]
+	
+Programm tuvastab automaatselt lisatud taustad
+
+...........................................................
+
+3. Eriprogrammide lisamine
+
+Kui soovitud eriprogramm on heli, siis kopeerige see
+järgmisesse kausta:
+	[ media -> special ]
+
+Seejärel avage fail "specialevents.txt", mis asub järgmises
+kaustas:
+	[ media ]
+
+Lisage tekst järgnevas formaadis:
+<tund>-<minut>-<sekund>-<failinimi>-<teade>-<taustapilt>;
+
+Näide:
+23-0-0-näide.mp3-See on näide-special.png;
+
+************************Pane tähele*************************
+Semikoolon on vajalik, et eristada erisündmuseid üksteisest.
+Soovi korral võite erisündmused lisada ridadesse, kuid semi-
+koolon on endiselt kohustuslik. Viimase eriprogrammi järele
+semikoolonit ei tohi lisada! Fail ei tohi alata tühja reaga.
+************************************************************
+
+Süntaks:
+
+ - Tund, minut ja sekund tähistavad täpset kellaaega, millal
+   see fail esitatakse.
+
+ - Failinimi on konkreetne failinimi, mis asub "special"
+   kaustas.
+
+ - Teade kuvatakse üleval vasakul nurgas eriprogrammi esitamise
+   ajal (seal, kus tavaliselt kuvatakse esitatava muusikapala
+   nimi)
+  
+ - Taustapilt kuvatakse eriprogrammi esitamise ajal. Võimalik on
+   kasutada animeeritud taustapilti, kui lisate eriprogrammiks
+   hääleta video ning esitate selle samal ajal (vt punkt 6) või
+   kui argumendiks listaud pilt on animeeritud GIF formaadis.
+   
+*
+
+Kui soovitud eriprogramm on video, kopeerige see järgmisesse
+kausta:
+	[ media -> special -> videos ]
+
+Video failiformaat peab olema WEBM või MP4
+
+Seejärel avage fail "specialevents.txt", mis asub järgmises
+kaustas:
+	[ media ]
+
+Lisage tekst järgnevas formaadis:
+<tund>-<minut>-<sekund>-**<failinimi>-<teade>-<taustapilt>;
+
+Näide:
+23-0-0-**näide.mp4-See on näide-special.png;
+
+
+************************Pane tähele*************************
+Kaks tärni failinime ees on vajalikud ainult videofailide
+puhul. Kui kahte tärni pole lisatud, interpreteeritakse
+faili helina.
+************************************************************
+
+Süntaks on identne heliga.
+
+Taustapildi argument tuleb videofailide puhul lisada, kuid
+seda ei kasutata taustana (isegi kui tegemist on läbipaistva
+videoga).
+
+Ette on juba antud järgmised sündmused:
+
+23-58-30-PRG_CDN.mp3-Uus aasta algab mõne sekundi pärast!;
+0-0-0-**fireworks.webm-Head uut aastat!!!;
+0-3-0-**black.webm-;
+
+Need sündmused käivitatakse siis, kui algab uus aasta. Soovi
+korral võite neid muuta. "black.webm" peatab esitatava video.
+
+Kui lisate kesköösel esitatava video eriprogrammi, siis see
+esitatakse ilma helita ning esitatava muusika taustal.
+Vaikesättena esitatakse 3 minutit ilutulestikku.
+
+
+...........................................................
+
+4. Tekst-teadete lisamine
+
+Kui soovite kuvada kindlat teksti mingisugusel kellaajal,
+siis saate muuta faili "specialmessages.txt", mis asub
+järgmises kaustas:
+
+	[ media ]
+
+Siia saate lisada teksti järgmises formaadis:
+<tund>-<minut>-<sekund>-<teade/tärn>;
+
+Näide:
+23-0-0-See on näide!;
+
+Kui soovite teate kuvamise peatada, kasutage teate asemel
+tärni. Kui te ei peata teate kuvamist, siis seda tehakse
+automaatselt muusikapala vahetumisel või eriprogrammi
+alguses/lõpus.
+
+Näide:
+23-0-1-*;
+
+Süntaks:
+
+ - Tund, minut, sekund on teate kuvamise/peatamise kellaaeg
+ 
+ - Teade/tärn on kuvatav tekst. Kui kasutate tärni, siis
+   peatakse sunniviisiliselt teate kuvamine
+
+
+...........................................................
+
+5. Juhuslikustamine
+
+Kui soovite kuvada juhuslikku teadet ja/või eriprogrammi,
+saate kasutada järgmist süntaksi specialevents.txt failis:
+
+<tund>-<minut>-<sekund>-<toiming1>//<toiming2>//[...]//<toimingN>-<teade>-<taust>;
+
+Toimingud on erinevad video- või helifailid, mis juhuslikult
+valitakse.
+
+Kasutades kahte kaldkriipsu valitakse juhuslik toiming ja
+veendutakse, et ükski sündmus ei korduks.
+
+Kui soovite, et oleks võimalik mingit sündmust juhuslikult
+valides mitu korda esitada, saate kasutada kolme kaldkriipsu:
+<toiming1>///<toiming2>///[...]///<toimingN>
+
+Kahte ja kolme kaldkriipsu on võimalik kasutada korraga,
+sellises olukorras valitakse juhuslikult kõigepealt kolme
+kriipsuga eraldatud grupid ning seejärel kahe kriipsuga
+eraldatud toimingud:
+
+Näide juhusliku toimingu valimise protsessist:
+<toiming1>//<toiming2>///<toiming3>//<toiming4>//<toiming5>
+<toiming1>//<toiming2>
+<toiming2>
+
+Samamoodi saate juhuslikustada, millist teadet kuvatakse
+specialmessages.txt failis:
+23-29-20-<teade1>//<teade2>//[...]//<teadeN>-<taust>
+
+Saate ka samamoodi kasutada kolme kaldkriipsu ja mõlemat
+tüüpi juhuslikustamist korraga.
+
+
+...........................................................
+
+6. Video esitamine taustapildina muusika taustal
+
+Juhul, kui soovite, et videofaili esitatakse muusika
+taustal, lisage specialevents.txt failis video ette veel
+üks tärn.
+
+Näide:
+0-0-0-***fireworks.webm-Head uut aastat!!!-special.png;
+
+Video heli esitatakse koos muusikaga, v.a. siis kui videol
+puudub heli.
+
+
+...........................................................
+
+7. Liidese kuvamine/peitmine
+
+Kui soovite ajastada liidese peitmise, saate lisada
+järgmise rea faili specialmessages.txt:
+
+<tund>-<minut>-<sekund>-*[;
+
+Et liides uuesti kuvada, lisage see rida:
+
+<tund>-<minut>-<sekund>-*];
+
+Muusikapala nime kuvamiseks saate lisada selle rea:
+
+<tund>-<minut>-<sekund>-*;
+
+
+***********************************************************
+Programmi käivitamine ja kasutamine
+***********************************************************
+Selleks, et kasutada uue aasta vastuvõtjat peame esmalt
+seadistama veebiserveri, mille abil saame programmile
+juurdepääsu veebibrauseri kaudu.
+
+...........................................................
+
+1. Ettevalmistused
+
+Enne kui saate uue aasta vastuvõtjat kasutada, peate
+paigaldama Python 3 tarkvara enda arvutisse. Paigaldamisel
+olge kindlad, et "Add Python to PATH" on märgitud (Windowsi
+versiooni puhul).
+
+Windowsis avage Start-menüü ning kirjutage "cmd.exe" ja
+vajutage sisestusklahvi. Teistes operatsioonsüsteemides
+leidke programm, mille nimeks on kas "Konsool" või
+"Terminal".
+
+Seejärel käivitage käsureal järgmised käsklused (kopeerige,
+kleepige, vajutage sisestusklahvi):
+
+	pip install flask
+	pip install waitress
+	pip install mutagen
+
+Kui need käsklused ei töötanud, võite proovida ka neid
+käsklusi:
+
+	pip3 install flask
+	pip3 install waitress
+	pip3 install mutagen
+
+Need käsklused paigaldavad vajalikud sõltuvused, et uue
+aasta vastuvõtja töötaks korrektselt.
+
+Pärast käskluste käivitamist ja lõpetamist sulgege aken.
+
+PS: Kui ükski mainitud käsklustest ei töötanud, siis
+ei ole te paigaldunud pip tarkvara või märkinud
+"Add Python to PATH" valikut Pythoni paigaldamisel.
+Pip installimiseks laadige alla get-pip.py sellelt
+veebiaadressilt: https://bootstrap.pypa.io/get-pip.py
+Seejärel avage käsurida ning minge vastavasse kausta,
+kuhu te laadisite alla get-pip.py. Seejärel käivitage
+järgmine käsklus:
+	
+	python get-pip.py
+
+
+...........................................................
+
+2. Serveri käivitamine
+
+Windowsi arvutis: Topeltklõpsake faili "run_server.bat".
+See pakkfaili otsib Python3 teie arvutist ja käivitab
+serveri.
+
+Linuxi arvutis: Minge vastavasse kataloogi käsureal
+(nt cd ~/Uue_aasta_vastuv6tja) ja käivitage server
+käsuga ./linux_run_server.sh.
+
+Muudes opsüsteemides: Leidke viis pyserver.py faili
+käivitamiseks. Käsureal võite ka proovida käsklusi
+python pyserver.py ja python3 pyserver.py
+
+Te saate nüüd uue aasta vastuvõtjat kasutada!
+
+Avage vabalt valitud veebibrauser ning minge sellele
+veebiaadressile:
+http://localhost:<järgmise aasta number>
+Näide: http://localhost:2022
+
+PS: Kui muudate koodi, siis tuleb muudatuste rakendamiseks
+veebiserver taaskäivitada.
+
+PPS: Kui eksisteeriv veebiserver kasutab järgmise aasta
+numbrit pordina, saate seda käsitsi muuta Config.ini
+failis (täpsem info hilisemas peatükis).
+
+...........................................................
+
+3. Esimene käivitus
+
+Uue aasta vastuvõtja kasutab kiirklahvide põhist liidest.
+Kui käivitasite uue aasta vastuvõtja veebilehitsejas, siis
+peate te alguses vajutama klahvi "P". See on vajalik, et
+anda veebilehele luba esitada heli. Kui teie veebibrauser
+ei nõua kasutaja luba (nt OBS veebilehitseja allikas), siis
+saate veebiaadressi lõppu lisada "?noinput=1".
+
+Näide: http://localhost:2022/?noinput=1
+
+...........................................................
+
+4. Küljendus
+
+Esiplaan:
+	- üleval
+		- vasakul
+			kuvatakse esitatav muusikapala või teade
+		- paremal
+			kuvatakse praegune kuupäev ja kellaaeg, helitugevus
+			ja ajaline asukoht esitatavas failis
+			
+			kui muusikapala nimi on liiga pikk, siis peidetakse
+			ajutiselt praegune kuupäev ja kellaaeg
+
+	- keskel
+		- üleval
+			kuvatakse tekst "Uue aastani on jäänud" või
+			info/nõuanne
+		- all
+			kuvatakse järelejäänud aeg järgmise aasta alguseni
+			see arvutatakse vastavalt teie arvuti kellaajale
+						
+		1. jaanuaril kuvatakse alati ekraani keskel tekst:
+						Head uut aastat!
+						 <aasta number>
+
+	- all
+		- vasakul
+			kuvatakse muusikapalade esitamise ajal üldinfo
+			ülekande kohta
+			
+			kui käivitub audio eriprogramm, siis see tekst
+			kaob ning asemele ilmub tekst "Eriprogrammi
+			esitamine"
+
+Keskplaan:
+	- muusikapalade esitamise ajal kuvatakse tumendusefekt
+	- videofailide esitamise ajal kuvatakse üleminekuefekt
+	- audio eriprogrammide esitamise ajal ei kuvata midagi
+
+Tagaplaan:
+	- muusikapalade esitamise ajal kuvatakse slaidiesitus
+	  lisatud taustapiltidega
+	  
+	  taustapiltide puudumisel kuvatakse must või hall taust
+	 
+	- videofailide esitamise ajal kuvatakse video
+	
+	- audio eriprogrammide ajal kuvatakse sinine-lilla taust
+	
+...........................................................
+
+5. Kiirklahvid
+
+Uue aasta vastuvõtja toetab järgnevaid kiirklahve:
+
+	- Vasak nooleklahv: Mängi eelmine muusikapala
+	- Parem nooleklahv: Mängi järgmine muusikapala
+	
+	- Ülemine nooleklahv: Suurenda helitugevust (ei toimi
+	  videofailide puhul)
+	- Alumine nooleklahv: Vähenda helitugevust (ei toimi
+	  videofailide puhul)
+	
+	- F4: Tühjenda esitusajalugu. See tähendab, et samad
+	  palad võivad nüüd uuesti korduda.
+	  
+	- P: Anna luba meediumifailide esitamiseks
+	  (veebibrauserile)
+	
+	- Numbriklahvistikul 0: Käivitab testimiseks mõeldud
+	  audio eriprogrammi. Väljumiseks vajutage uuesti
+	  seda klahvi ning teade "// EXIT SERVICE TEST //"
+	  peaks ilmuma ekraanile.
+	  
+	- Numbriklahvistikul 1: Käivitab testimiseks mõeldud
+	  video eriprogrammi. Väljumiseks vajutage uuesti
+	  seda klahvi.
+
+
+...........................................................
+
+6. Testimine
+
+Uue aasta vastuvõtja erisündmuste testimiseks, muutke
+arvuti kuupäeva (31. detsember) ja kellaaega (lülitage
+välja automaatne kuupäev, kellaaeg ning ajavöönd).
+Soovitatav on seda teha virtuaalses arvutis.
+
+...........................................................
+
+7. OBS studio allika lisamine
+
+Kui soovite uue aasta vastuvõtjat kasutada OBS studio
+allkana, tehke järgnevat:
+
+	- Käivitage uue aasta vastuvõtja server
+	- Lisage uus stseen
+	- Lisage stseenile veebisaidi allikas. Linuxis lisage
+	  näiteks allikas "Linux browser".
+	- Seadistage allikale nimi ning vajutage OK
+	- Muutke URL-i. Uueks URL-iks määrake:
+	  http://localhost:<järgminse aasta nr>/?noinput=1
+	  (näiteks http://localhost:2022/?noinput=1)
+	- Lisage kohandatud CSS. Valige sirvi ning leidke
+	  fail "stream_margins.css" kaustas "media"
+	  (see parandab küljendusvead OBS studio brauseris)
+    - Määrake soovitud brauseri akna suurus
+    - Vajutage OK, et lõpetada allika seadistamine
+    - Uue aasta vastuvõtja peaks kohe tööle hakkama ning
+      muusikat esitama
+
+
+***********************************************************
+Konfiguratsioonifaili redigeerimine
+***********************************************************
+Selleks, et pakkuda teile sobivat kogemust, saate muuta
+faili "Config.ini" sisu.
+
+Konfiguratsioonid on jaotatud kategooriatesse, mis on
+ümbritsetud nurksulgudega.
+
+nt : [IdleText]
+
+Seletavad kommentaarid algavad semikooloniga ning neid
+ignoreeritakse programmi poolt.
+
+nt : ;See on kommentaar
+
+**************************Hoiatus***************************
+Konfiguratsioonifaili valesti seadistamine võib kaasa tuua
+selle, et programm enam ei käivitu.
+************************************************************
+...........................................................
+
+1. Tegevuseta kuvatavate tekstide muutmine
+
+Uue aasta vastuvõtja kuvab aeg-ajalt ekraani keskel,
+taimeri kohal, erinevaid lauseid. Neid saab muuta IdleText
+kategooria all.
+
+Konfiguratsiooni muutmiseks, leidke tekst, mida soovite
+muuta ning asendage tekst, mis on pärast võrdusmärki.
+
+nt            : IdleF=Esitusajaloo nullimiseks vajutage klahvi F4
+nt (muudetud) : IdleF=See on muudetud tekst
+
+
+...........................................................
+
+2. Sihtkuupäeva ja -kellaaja muutmine
+
+Kategooria "TargetTime" all saate muuta millise kindla
+kuupäeva ja kellaajani taimer jookseb.
+
+Attribuudid ja nende seletused:
+
+DateDay   - Kindel päev kuus, milleni taimer jookseb (1-31)
+DateMonth - Kindel kuu, milleni taimer jookseb (1-12)
+TimeHours - Kindel tund, milleni taimer jookseb. Kui väärtus
+            on väiksem kui 24, siis loetakse päevani enne
+            DateDay attribuudiga määratud päeva. Kui võrdne
+            või suurem, siis tunnini määratud päeval (nt
+            kui DateDay=1 , DateMonth=1 ja TimeHours=24,
+            siis jookseb taimer 1. jaanuarini, kui aga
+            TimeHours oleks 0, siis 31. detsembri keskööni).
+
+            See süsteem töötab sedasi, selleks, et kasutaja
+            saaks määrata, millal eriprogramme esitatakse
+            (kas päev enne või samal päeval)
+TimeMins   - Kindel minut, milleni taimer jookseb.
+TimeSecs   - Kindel sekund, milleni taimer jookseb.
+TimeMillis - Kindel millisekund, milleni taimer jookseb.
+
+...........................................................
+
+3. Taimeri tüübi muutmine ja sünnipäevarežiimi seadistamine
+
+Kategooria "Countdown" all saab määrata, millist tüüpi
+taimeriga on tegu. Vaikesättena on Uue aasta vastuvõtja
+uue aasta režiimis (st, et kui taimer jõuab nullini, siis
+soovitakse head uut aastat ja kuvatakse aasta number).
+
+Lisaks uue aasta vastuvõtule toetab see programm ka palju
+muid režiime, mida saab määrata attribuudi "Type" abil.
+Need režiimid on järgmised:
+
+0  - Uus aasta (vaikesäte)
+1  - Jõululaupäev
+2  - Jõulupüha
+3  - Sünnipäev
+4  - Lipupäev
+5  - Iseseisvuspäev
+6  - Sõbrapäev
+7  - Suur reede
+8  - Kevadine pööripäev
+9  - Sügisene pööripäev
+10 - Jaanipäev
+11 - Võidupüha
+12 - Püha Patricku päev
+13 - Usupuhastus
+
+nt : Type=1 seadistab programmi jõululaupäeva režiimile
+
+Sünnipäevarežiimi jaoks on ka veel kaks eraldi attribuuti:
+"BirthdayName" ja "BirthdayYear".
+
+BirthdayName määrab, kelle sünnipäevani taimer jookseb.
+
+BirthdayYear määrab, millisel aastal sünnipäevaline
+sündis.
+
+************************Pane tähele*************************
+Taimeri režiim EI MÄÄRA millisel kuupäeval taimer peatub.
+Et määrata millise kuupäevani taimer jookseb, vaadake
+"Sihtkuupäeva ja -kellaja muutmine" sektsiooni selles
+kasutusjuhendis.
+************************************************************
+
+...........................................................
+
+4. Vesimärgi seadistamine
+
+Vaikesättena uue aasta vastuvõtja ei kuva vesimärki. Kuid,
+kui soovite lisada enda logo või kuvada "markuse tarkvara
+js" logo, siis saate seda teha "Watermark" sektsiooni alt.
+
+Attribuut "Show" määrab kas vesimärki peaks kuvama või
+mitte. Kui attribuudi väärtus on 0, siis vesimärki ei
+kuvata. Kui attribuudi väärtus on 1, siis see kuvatakse.
+
+Attribuut "File" määrab millist pildifaili kuvada vesi-
+märgina. Et lisada enda logo, kopeerige see kõigepealt
+järgnevasse kausta:
+
+[ media ]
+
+Seejärel määrake attribuudi väärtuseks failinimi (koos
+laiendusega).
+
+Näiteks, kui failinimi on "logo.png", siis peaks
+attribuut nägema välja selline:
+File=logo.png
+
+...........................................................
+
+5. Informatsiooni tekst
+
+Sektsioon "InfoText" võimaldab lisada pealkirja ja teksti
+ekraani alumisse vasakusse nurka.
+
+Attribuut "Title" määrab pealkirja ning attribuut "Details"
+määrab infoteksti sisu. Nende väärtuste tühjaks jätmine
+peidab infoteksti.
+
+...........................................................
+
+6. Serveri konfiguratsioon
+
+Sektsioonis "Server" on järgmised attribuudid:
+
+Port - Millisesse porti edastatakse uue aasta vastuvõtja.
+       Kui väärtuseks on "auto", siis on pordiks järgmise
+       aasta number.
+
+Host - Millisele IP aadressile edastatakse uue aasta vastu-
+       võtja. Kui väärtuseks on "auto", siis on selleks
+       kohalik võrguala (IP: 0.0.0.0).
+
+Root - Programmi juurkaust. Selleks on kaust, milles on
+       kõik vajalikud failid uue aasta vastuvõtja tööks.
+       Kui väärtuseks on "auto", siis on selleks
+       kaust, millest programm käivitati.

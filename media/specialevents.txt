@@ -1,0 +1,9 @@
+14-0-0-**welcome.webm-Tere tulemast!-special.png;
+23-57-55-PRG_MSG.mp3-Uus aasta algab paari minuti pärast!-fireworks.gif;
+23-58-30-PRG_CDN.mp3-Uus aasta algab mõne sekundi pärast!-special.png;
+23-58-29-***countdown.webm-Uus aasta algab mõne sekundi pärast!-special.png;
+0-0-0-***fireworks.webm-Head uut aastat!!!-special.png;
+0-1-13-***fireworks_minecraft.webm-Head uut aastat!!!-special.png;
+9-55-0-PRG_FFF.mp3-Ülekande korraldaja ootamine...-special.png;
+10-0-0-PRG_000.mp3-Ülekande lõpetamine-endstream.png;
+10-1-14-PRG_FFF.mp3-Ülekande automaatne peatamine nurjus. Ülekande korraldaja ootamine...-stopfail.png

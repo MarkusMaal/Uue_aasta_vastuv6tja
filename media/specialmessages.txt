@@ -1,0 +1,15 @@
+23-58-0-Uus aasta algab vähem kui 2 minuti pärast!;
+23-58-29-*[;
+0-0-5-*];
+1-1-20-Ülekanne lõppeb muusikaga;
+1-1-50-*;
+9-55-30-Kui ülekande korraldajat ei saabu...;
+9-56-0-...lõppeb ülekanne automaatselt kell 10.00;
+9-56-30-Ülekande korraldaja ootamine...;
+9-57-0-Kui ülekande korraldajat ei saabu...;
+9-57-30-...lõppeb ülekanne automaatselt kell 10.00;
+9-58-0-Ülekande korraldaja ootamine...;
+9-58-30-Kui ülekande korraldajat ei saabu...;
+9-59-0-...lõppeb ülekanne automaatselt kell 10.00;
+9-59-30-Ülekande korraldaja ootamine...;
+10-0-0-*[
