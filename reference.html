@@ -202,6 +202,7 @@
                     }
                 }
             }
+            let displayEnglish = false;
             var pretarget = [curday, curmonth];
             // set which time the clock counts down to
             //
@@ -349,6 +350,14 @@
                     return no;
                 }
             }
+
+            function ms(et, en, de) {
+                if (de) {
+                    return en;
+                } else {
+                    return et;
+                }
+            }
             
             function ShowHideAll(show) {
                 var stype = "hidden";
@@ -412,8 +421,8 @@
 
             // change language every 30 seconds
             window.setInterval(function() {
-
-            }, 30000);
+                displayEnglish = !displayEnglish;
+            }, 10000);
 
             // display special messages if the time is correct
             // show the song name if the message is set to an asterisk
@@ -452,8 +461,8 @@
                         }
                     }
                 }
-                if (document.getElementById("breaktitle").innerHTML == "Testimisrežiim") {
-                    document.getElementById("breakdetails").innerHTML = "Võltskellaaeg: " + ctime.currentTime();
+                if (document.getElementById("breaktitle").innerHTML == ms("Testimisrežiim", "Testing mode", displayEnglish)) {
+                    document.getElementById("breakdetails").innerHTML = ms("Võltskellaaeg", "Fake time", displayEnglish) + ": " + ctime.currentTime();
                 }
             }, 500);
             // switch idle texts every 30 seconds
@@ -461,20 +470,20 @@
                 var amsg = document.getElementById("announcement").innerHTML;
                 if (document.getElementById("myvideo").paused || is_bg) {
                     if (!newyear) {
-                        if (amsg == "{{towhat}} on jäänud") {
+                        if (amsg == ms("{{towhat}} on jäänud", "Time remaining until {{towhaten}}", displayEnglish)) {
                             switch (an_id) {
                                 case 0:
                                     var nextyear = new Date().getFullYear() + 1;
-                                    document.getElementById("announcement").innerHTML = "Järgmine aasta on " + nextyear;
+                                    document.getElementById("announcement").innerHTML = ms("Järgmine aasta on ", "The next year is ", displayEnglish) + nextyear;
                                     break;
                                 case 1:
-                                    document.getElementById("announcement").innerHTML = "Järgmine taustapilt on  " + backgrounds[curImgId].replace("media/backgrounds/", "").replace(".jpg", "").replace(".jpeg" ,"").replace(".jpe", "");
+                                    document.getElementById("announcement").innerHTML = ms("Järgmine taustapilt on ", "The next background is ", displayEnglish) + backgrounds[curImgId].replace("media/backgrounds/", "").replace(".jpg", "").replace(".jpeg" ,"").replace(".jpe", "");
                                     break;
                                 case 2:
-                                    document.getElementById("announcement").innerHTML = "Praegu on saadaval " + songcount + " muusikapala";
+                                    document.getElementById("announcement").innerHTML = ms("Praegu on saadaval ", "Currently there are ", displayEnglish) + songcount + ms(" muusikapala", " songs available");
                                     break;
                                 case 3:
-                                    document.getElementById("announcement").innerHTML = "Praegu on saadaval " + numberOfImages + " taustapilti";
+                                    document.getElementById("announcement").innerHTML = ms("Praegu on saadaval ", "Currently there are ", displayEnglish) + numberOfImages + ms(" taustapilti", " backgrounds available", displayEnglish);
                                     break;
                                 case 4:
                                     document.getElementById("announcement").innerHTML = "{{idletext[0]}}";
@@ -504,7 +513,7 @@
                             }
                             an_id = Math.floor(Math.random() * 11);
                         } else {
-                            document.getElementById("announcement").innerHTML = "{{towhat}} on jäänud";
+                            document.getElementById("announcement").innerHTML = ms("{{towhat}} on jäänud", "Time remaining until {{towhaten}}", displayEnglish);
                         }
                     }
                 }
@@ -611,7 +620,7 @@
                             if (plays >= songs.length - 4) {
                                 playedmusic = [];
                                 plays = 0;
-                                document.getElementById("songname").innerHTML = "Esitusajalugu nulliti";
+                                document.getElementById("songname").innerHTML = ms("Esitusajalugu nulliti", "Playlist cleared", displayEnglish);
                                 player.currentTime = 0;
                                 player.src = "";
                             }
@@ -634,7 +643,7 @@
                     case 115:
                         playedmusic = [];
                         plays = 0;
-                        document.getElementById("songname").innerHTML = "Esitusajalugu nulliti";
+                        document.getElementById("songname").innerHTML = ms("Esitusajalugu nulliti", "Playlist cleared", displayEnglish);
                             player.currentTime = 0;
                         player.src = "";
                         break;
@@ -933,22 +942,22 @@
                         document.getElementById("ui_minutes").style = "padding-left: 25px;";
                     }
                     // set text below counters
-                    document.getElementById("ui_minutes").innerHTML = "minutit";
-                    document.getElementById("ui_hours").innerHTML = "tundi";
-                    document.getElementById("ui_days").innerHTML = "päeva";
-                    document.getElementById("ui_seconds").innerHTML = "sekundit";
+                    document.getElementById("ui_minutes").innerHTML = ms("minutit", "minutes", displayEnglish);
+                    document.getElementById("ui_hours").innerHTML = ms("tundi", "hours", displayEnglish);
+                    document.getElementById("ui_days").innerHTML = ms("päeva", "days", displayEnglish);
+                    document.getElementById("ui_seconds").innerHTML = ms("sekundit", "seconds", displayEnglish);
                     // if any counter is one, set the text below to be singular
                     if (days == "01") {
-                        document.getElementById("ui_days").innerHTML = "päev";
+                        document.getElementById("ui_days").innerHTML = ms("päev", "day", displayEnglish);
                     }
                     if (smins == "01") {
-                        document.getElementById("ui_minutes").innerHTML = "minut";
+                        document.getElementById("ui_minutes").innerHTML = ms("minut", "minute", displayEnglish);
                     }
                     if (shrs == "01") {
-                        document.getElementById("ui_hours").innerHTML = "tund";
+                        document.getElementById("ui_hours").innerHTML = ms("tund", "hour", displayEnglish);
                     }
                     if (ssecs == "01") {
-                        document.getElementById("ui_seconds").innerHTML = "sekund";
+                        document.getElementById("ui_seconds").innerHTML = ms("sekund", "second", displayEnglish);
                     }
                     // hide certain counters if they are "00"
                     // adjust margins if neccesary
@@ -973,17 +982,17 @@
                     document.getElementById("ctime").innerHTML = cdate + " " + ch + ":" + cm + ":" + cs + " | " + volume + " | " + fulltime ;
                     // set certain text fields to have values if they are empty
                     if (document.getElementById("announcement").innerHTML == "") {
-                        document.getElementById("announcement").innerHTML = "{{towhat}} on jäänud";
+                        document.getElementById("announcement").innerHTML = ms("{{towhat}} on jäänud", "Time until {{towhaten}}", displayEnglish);
                     }
                     if (document.getElementById("ui_seconds").innerHTML == "") {
-                        document.getElementById("ui_days").innerHTML = "päeva";
-                        document.getElementById("ui_seconds").innerHTML = "sekundit";
-                        document.getElementById("ui_minutes").innerHTML = "minutit";
-                        document.getElementById("ui_hours").innerHTML = "tundi";
+                        document.getElementById("ui_days").innerHTML = ms("päeva", "days", displayEnglish);
+                        document.getElementById("ui_seconds").innerHTML = ms("sekundit", "seconds", displayEnglish);
+                        document.getElementById("ui_minutes").innerHTML = ms("minutit", "minutes", displayEnglish);
+                        document.getElementById("ui_hours").innerHTML = ms("tundi", "hours", displayEnglish);
                     }
                 } else {
                     // set layout if special video programme is played
-                    document.getElementById("ctime").innerHTML = cdate + " " + ch + ":" + cm + ":" + cs + " | Eriprogramm | " + fullvideotime;
+                    document.getElementById("ctime").innerHTML = cdate + " " + ch + ":" + cm + ":" + cs + " | " + ms("Eriprogramm", "Special programme", displayEnglish) + " | " + fullvideotime;
                     document.getElementById("announcement").innerHTML = "";
                     document.getElementById("countdown").innerHTML = "";
                     document.getElementById("ui_days").innerHTML = "";

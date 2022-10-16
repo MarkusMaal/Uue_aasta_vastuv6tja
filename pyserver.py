@@ -155,16 +155,19 @@ tagline = "Head uut aastat!"
 # subtag = str(int(datetime.datetime.now().date().strftime("%Y")) + 1)
 subtag = str(int(datetime.datetime.now().date().strftime("%Y")))
 towhat = "Uue aastani"
+towhaten = "New Year"
 
 if cdn_type == 1:
     tagline = "Head jõululaupäeva!"
     towhat = "Jõululaupäevani"
+    towhaten = "Christmas Eve"
     subtag = "🎅"
     if janone == [0, -1]:
         janone = [24, 11]
 elif cdn_type == 2:
     tagline = "Häid jõulupühi!"
     towhat = "Jõulupühadeni"
+    towhaten = "Christmas Day"
     subtag = "🎅"
     if janone == [0, -1]:
         janone = [25, 11]
@@ -175,49 +178,59 @@ elif cdn_type == 3:
 elif cdn_type == 4:
     tagline = "Head lipupäeva!"
     towhat = "Lipupäevani"
+    towhaten = "Flag Day"
 elif cdn_type == 5:
     tagline = "Head iseseisvuspäeva!"
     towhat = "Iseseisvuspäevani"
+    towhaten = "Independence Day"
     subtag = str(int(datetime.datetime.now().date().strftime("%Y")) - birthyear)
 elif cdn_type == 6:
     tagline = "Head sõbrapäeva!"
     towhat = "Sõbrapäevani"
+    towhaten = "Valentine Day"
     subtag = "❤️"
     if janone == [0, -1]:
         janone = [14, 1]
 elif cdn_type == 7:
     tagline = "Toredaid kevadpühi!"
     towhat = "Suure reedeni"
+    towhaten = "Big Friday"
     subtag = "🐇"
 elif cdn_type == 8:
     tagline = "Algas kevadine pööripäev!"
     towhat = "Kevadise pööripäevani"
+    towhaten = "Spring Equinox"
     subtag = "🌼"
 elif cdn_type == 9:
     tagline = "Algas talvine pööripäev!"
     towhat = "Talvise pööripäevani"
+    towhaten = "Winter Equinox"
     subtag = "❄️"
 elif cdn_type == 10:
     tagline = "Toredat ja ohutut jaani!"
     towhat = "Jaanipäevani"
+    towhaten = "Midsummer Day"
     subtag = "🔥"
     if janone == [0, -1]:
         janone = [25, 5]
 elif cdn_type == 11:
     tagline = "Head võidupüha!"
     towhat = "Võidupühani"
+    towhaten = "Victory Day"
     subtag = "🇪🇪"
     if janone == [0, -1]:
         janone = [24, 5]
 elif cdn_type == 12:
     tagline = "Head püha Patricku päeva!"
     towhat = "Püha Patricku päevani"
+    towhaten = "St. Patrick Day"
     subtag = "🍀"
     if janone == [0, -1]:
         janone = [17, 2]
 elif cdn_type == 13:
     tagline = "Head usupuhastuspüha!"
     towhat = "Usupuhastuseni"
+    towhaten = "Halloween"
     subtag = "🎃"
     if janone == [0, -1]:
         janone = [31, 9]
@@ -328,7 +341,7 @@ def index():
     page = render_template("reference.html", permission=permission, msgs=msgs, special=special, songs=songs,
                            backgrounds=backgrounds, nimg=len(backgrounds), nsong=len(songs), it=infotext,
                            itt=infotext_title, idletext=idletext, janone=janone, midnight=midnight, logodisp=disp_logo,
-                           logofile=logofile, tagline=tagline, towhat=towhat, subtag=subtag)
+                           logofile=logofile, tagline=tagline, towhat=towhat, towhaten=towhaten, subtag=subtag)
     return page
 
 
