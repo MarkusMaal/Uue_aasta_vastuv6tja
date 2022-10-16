@@ -298,35 +298,35 @@
     <body>
         <!-- teh front end HTML -->
         <div class="main">
-        <h2 id="songname" class="sn">Vajutage P, et anda luba multimeedia esitamiseks</h2>
-        <h2 id="ctime" class="timestamp"></h2>
-        <div class="contains">
-        <h1 id="announcement">{{towhat}} on jäänud</h1>
-        <h1 id="countdown" class="timetillnewyear"></h1>
-        <table class="centrum">
-        <tr>
-        <td id="ui_days">päeva</td>
-        <td id="ui_hours">tundi</td>
-        <td id="ui_minutes">minutit</td>
-        <td id="ui_seconds">sekundit</td>
-        </tr>
-        </table>
+            <h2 id="songname" class="sn">Vajutage P, et anda luba multimeedia esitamiseks</h2>
+            <h2 id="ctime" class="timestamp"></h2>
+            <div class="contains">
+            <h1 id="announcement">{{towhat}} on jäänud</h1>
+            <h1 id="countdown" class="timetillnewyear"></h1>
+            <table class="centrum">
+            <tr>
+            <td id="ui_days">päeva</td>
+            <td id="ui_hours">tundi</td>
+            <td id="ui_minutes">minutit</td>
+            <td id="ui_seconds">sekundit</td>
+            </tr>
+            </table>
+            </div>
+            <a href="#" onclick='document.getElementById("permission").style.display = "none";' id="permission" style="{{permission}}"></a>
+            <audio id="music" src="">
+            </audio>
+            <div id="wrapper-video">
+            <video id="myvideo" src="">
+            </video>
+            </div>
+            <div class="musicbreak" id="musicbreak">
+                <h3 id="breaktitle">{{itt}}</h3>
+                <p id="breakdetails" style="width: 50%;">{{it}}</p>
+            </div>
+            <!-- custom logo -->
+            <img class="logo" src="media/{{logofile}}">
+            <!-- end of teh front end HTML -->
         </div>
-        <a href="#" onclick='document.getElementById("permission").style.display = "none";' id="permission" style="{{permission}}"></a>
-        <audio id="music" src="">
-        </audio>
-        <div id="wrapper-video">
-        <video id="myvideo" src="">
-        </video>
-        </div>
-        <div class="musicbreak" id="musicbreak">
-            <h3 id="breaktitle">{{itt}}</h3>
-            <p id="breakdetails" style="width: 50%;">{{it}}</p>
-        </div>
-        <!-- custom logo -->
-        <img class="logo" src="media/{{logofile}}">
-        <!-- end of teh front end HTML -->
-        
         <script>
             // mute and pause audio (this gets executed right after the page is loaded by the
             // browser)
