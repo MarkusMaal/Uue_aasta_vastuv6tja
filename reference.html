@@ -1,10 +1,10 @@
 <!--
-    uue aasta vastuvõtja 3.1
+    uue aasta vastuvõtja 4.1
     {} markuse tarkvara js
     
     client-side code
     
-    (c) copyright 2021
+    (c) copyright 2022
     licensed under GNU General Public License v3
     (GPL3)
     
@@ -24,9 +24,13 @@
             
             /* set position for the music break text */
             div.musicbreak {
-                position: fixed;
-                bottom: 5%;
-                left: 3%;
+				position: fixed;
+				bottom: 5%;
+				display: flex;
+				width: 100%;
+				flex-direction: column;
+				text-align: center;
+				justify-content: center;
             }
             
             /* set font size for paragraphs */
@@ -405,6 +409,12 @@
                 }
                 curImgId = Math.floor(Math.random() * numberOfImages);
             }, 60 * 1000);
+
+            // change language every 30 seconds
+            window.setInterval(function() {
+
+            }, 30000);
+
             // display special messages if the time is correct
             // show the song name if the message is set to an asterisk
             window.setInterval(function() {

@@ -1,10 +1,10 @@
 """
-    uue aasta vastuvõtja 3.1
+    uue aasta vastuvõtja 4.1
     {} markuse tarkvara
 
     server-side code
 
-    (c) copyright 2021
+    (c) copyright 2022
     licensed under GNU General Public License v3
     (GPL3)
 
