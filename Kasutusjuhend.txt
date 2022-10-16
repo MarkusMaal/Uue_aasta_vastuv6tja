@@ -8,7 +8,6 @@ redigeerida ja edasi arendada tarkvara koodi ning luua
 selle baasil sama litsentsiga uusi projekte. Avage fail
 "LICENSE" tekstivaaturis täpsema info jaoks.
 
-* Muudatus *
 
                   ---  Kasutusjuhend  ---
 
