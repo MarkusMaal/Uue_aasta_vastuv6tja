@@ -12,29 +12,64 @@
 -->
 <!DOCTYPE html>
 <html lang="et">
-	<head>
-		<title>Uue aasta vastuvõtja</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<style>
+<head>
+    <title>Uue aasta vastuvõtja</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
             /* theme */
             /* font, change at your own risk */
 			body {
 				font-family: "Segoe UI";
 				color: #fff;
+				margin: 0px; padding: 0px;
+				overflow: hidden;
 			}
 			
-			.background-image {
+			#background-image {
 				position: absolute;
-				z-index: -99;
+				width: 100%;
+				height: 100%;
+				margin: 0px;
+				padding: 0px;
 				background: black;
-				animation-name: move;
-				animation-duration: 10s;
 			}
 
-			@keyframes move {
-				from { transform: scale(1); }
-				to { transform: scale(1.2); }
-			}
+			/* transitions */
+			#background-image.circle { animation-name: circle; animation-duration: 1s; }
+			#background-image.zoom { animation-name: zoom; animation-duration: 1s; }
+			#background-image.zoomout { animation-name: zoomout; animation-duration: 1s; }
+			#background-image.fade { animation-name: fade; animation-duration: 1s; }
+			#background-image.fadeblack { animation-name: fadeblack; animation-duration: 1s; }
+			#background-image.flash { animation-name: flash; animation-duration: 1s; }
+			#background-image.cover { animation-name: cover; animation-duration: 1s; }
+			#background-image.sweep { animation-name: sweep; animation-duration: 1s; }
+			#background-image.rotzoom { animation-name: rotzoom; animation-duration: 1s; }
+			#background-image.rotzoomalt { animation-name: rotzoomalt; animation-duration: 1s; }
+
+			@keyframes move { from { transform: scale(1); padding-left: 0%; }
+							  to { transform: scale(1.2); padding-left: 10%; } }
+			@keyframes zoom { from { opacity: 1; transform: scale(1); }
+							  to { opacity: 0; transform: scale(2); } }
+			@keyframes zoomout { from { opacity: 1; transform: scale(1); }
+							  to { opacity: 0; transform: scale(0.75); } }
+			@keyframes cover { from { margin-left: 0%; }
+							   to { margin-left: 100%; } }
+			@keyframes sweep { from { margin-left: 0%; }
+							   to { margin-left: -100%; } }
+			@keyframes rotzoom { from { opacity: 1; transform: rotate(0deg) scale(1); }
+			                     to { opacity: 0; transform: rotate(45deg) scale(2); } }
+			@keyframes rotzoomalt { from { opacity: 1; transform: rotate(0deg) scale(1); }
+			                     to { opacity: 0; transform: rotate(-45deg) scale(2); } }
+			@keyframes fade { from { opacity: 1; }
+				              to { opacity: 0; } }
+			@keyframes fadeblack { 0% { filter: brightness(100%); }
+				              50% { filter: brightness(0%); opacity: 1;  }
+				               100% { filter: brightness(0%); opacity: 0; } }
+			@keyframes flash { 0% { filter: brightness(100%); }
+				              10% { filter: brightness(1000%); opacity: 1;  }
+				               100% { opacity: 0; } }
+			@keyframes circle { from { opacity: 1; }
+				              to {  opacity: 0;  } }
 
 			/* set position for the music break text */
 			.musicbreak {
@@ -248,7 +283,7 @@
 				}
 			}
 		</style>
-		<script>
+    <script>
             // define function Date.prototype.currentTime
 			Date.prototype.currentTime = function(){
 			return this.getHours()+":" + this.getMinutes() + ":" + this.getSeconds() };
@@ -417,46 +452,46 @@
 			var numberOfImages = {{nimg}};
 			var curImgId = Math.floor(Math.random() * numberOfImages);
 		</script>
-	</head>
-	<body>
-		<!-- teh front end HTML -->
-		<div class="background-image">
-			<div class="main">
-				<h2 id="songname" class="sn">Vajutage P, et anda luba multimeedia esitamiseks</h2>
-				<h2 id="ctime" class="timestamp"></h2>
-				<div class="contains">
-				<h1 id="announcement">{{towhat}} on jäänud</h1>
-				<h1 id="countdown" class="timetillnewyear"></h1>
-				<table class="centrum">
-				<tr>
-				<td id="ui_days">päeva</td>
-				<td id="ui_hours">tundi</td>
-				<td id="ui_minutes">minutit</td>
-				<td id="ui_seconds">sekundit</td>
-				</tr>
-				</table>
-				</div>
-				<a href="#" onclick='document.getElementById("permission").style.display = "none";' id="permission" style="{{permission}}"></a>
-				<audio id="music" src="">
-				</audio>
-				<div id="wrapper-video">
-				<video id="myvideo" src="">
-				</video>
-				</div>
-				<div class="musicbreak" id="musicbreak">
-					<div>
-						<h3 id="breaktitle">{{itt}}</h3>
-					</div>
-					<div>
-						<p id="breakdetails">{{it}}</p>
-					</div>
-				</div>
-				<!-- custom logo -->
-				<img class="logo" src="media/{{logofile}}">
-				<!-- end of teh front end HTML -->
-			</div>
+</head>
+<body>
+<!-- teh front end HTML -->
+<div id="background-image" class="fade">
+</div>
+<div class="main">
+    <h2 id="songname" class="sn">Vajutage P, et anda luba multimeedia esitamiseks</h2>
+    <h2 id="ctime" class="timestamp"></h2>
+    <div class="contains">
+        <h1 id="announcement">{{towhat}} on jäänud</h1>
+        <h1 id="countdown" class="timetillnewyear"></h1>
+        <table class="centrum">
+            <tr>
+                <td id="ui_days">päeva</td>
+                <td id="ui_hours">tundi</td>
+                <td id="ui_minutes">minutit</td>
+                <td id="ui_seconds">sekundit</td>
+            </tr>
+        </table>
+    </div>
+    <a href="#" onclick='document.getElementById("permission").style.display = "none";' id="permission" style="{{permission}}"></a>
+    <audio id="music" src="">
+    </audio>
+    <div id="wrapper-video">
+        <video id="myvideo" src="">
+        </video>
+    </div>
+    <div class="musicbreak" id="musicbreak">
+        <div>
+            <h3 id="breaktitle">{{itt}}</h3>
         </div>
-		<script>
+        <div>
+            <p id="breakdetails">{{it}}</p>
+        </div>
+    </div>
+    <!-- custom logo -->
+    <img class="logo" src="media/{{logofile}}">
+    <!-- end of teh front end HTML -->
+</div>
+<script>
 			// mute and pause audio (this gets executed right after the page is loaded by the
 			// browser)
 			document.getElementById("music").volume = 0;
@@ -501,6 +536,44 @@
 				document.getElementsByClassName("logo")[0].style.visibility = stype;
 				document.getElementsByClassName("centrum")[0].style.visibility = stype;
 			}
+			function displayBackground(backgrounds, curImgId) {
+	            displayCustom(backgrounds[curImgId]);
+			}
+
+			function displayCustom(filename) {
+				document.getElementsByTagName('body')[0].style.background = 'url(' + filename + ') no-repeat center center fixed black';
+				document.getElementsByTagName('body')[0].style.backgroundSize = 'cover';
+				let animations = ["fade", "fadeblack", "flash", "zoom", "zoomout", "cover", "sweep", "rotzoom", "rotzoomalt"];
+				//let animations = ["circle"];
+				for (let i = 0; i < animations.length; i++) {
+					document.getElementById('background-image').classList.remove(animations[i]);
+				}
+				setTimeout(function(){
+				document.getElementById('background-image').classList.add(animations[Math.floor(Math.random() * animations.length)]);
+				}, 100)
+			}
+
+			function playVideo(filename) {
+			    let transition = "fadeblack";
+			    let animations = ["fade", "fadeblack", "flash", "zoom", "zoomout", "cover", "sweep", "rotzoom", "rotzoomalt"];
+				if (is_bg) { transition = animations[Math.floor(Math.random() * animations.length)]; }
+				// point to the video from the schedule
+				vid.src = "media/special/videos/" + filename;
+				// set body background to black
+				if (!is_bg) { document.getElementsByTagName('body')[0].style.background = 'black'; }
+				// play the video file
+				vid.play();
+				for (let i = 0; i < animations.length; i++) {
+					document.getElementById('background-image').classList.remove(animations[i]);
+				}
+				setTimeout(function(){
+				document.getElementById('background-image').classList.add(transition);
+				}, 100)
+				setTimeout(function(){
+				document.getElementById('background-image').style.display = "none";
+				}, 1000);
+			}
+
 			// restore normal music break state
 			// this function is triggered when exiting special events, such as
 			// special audio and video clips
@@ -517,20 +590,18 @@
 					document.getElementById('myvideo').currentTime = 0;
                     document.getElementsByClassName("main")[0].style.background = "rgba(0, 0, 0, 0.25)";
                     document.getElementsByClassName("main")[0].style.height = "100%";
-					document.getElementsByTagName('background-image')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
-					document.getElementsByTagName('background-image')[0].style.backgroundSize = 'cover';
+                    document.getElementById("background-image").style.display = "block";
+                    document.getElementById("background-image").style.background = "black";
+                    displayBackground(backgrounds, curImgId);
 			}
 			// set background image
-			document.getElementsByTagName('background-image')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
-			document.getElementsByTagName('background-image')[0].style.backgroundSize = 'cover';
-
+            displayBackground(backgrounds, curImgId);
 			// display black translucent background if no special events are triggered
 			// also switch the background image every minute (change 60 to something else
 			// to change the interval)
 			window.setInterval(function() {
 				if (playspecial == false) {
-					document.getElementsByTagName('background-image')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
-					document.getElementsByTagName('background-image')[0].style.backgroundSize = 'cover';
+                    displayBackground(backgrounds, curImgId);
 				}
 				curImgId = Math.floor(Math.random() * numberOfImages);
 			}, 60 * 1000);
@@ -575,6 +646,12 @@
 					document.getElementById("breakdetails").innerHTML = "Võltskellaaeg: " + ctime.currentTime();
 				}
 			}, 500);
+			// switch to top layer after animation finishes
+			document.getElementById("background-image").addEventListener("animationend", function() {
+				let bottomLayer = document.getElementsByTagName("body")[0];
+				let aboveLayer = document.getElementById("background-image");
+				aboveLayer.style.background = bottomLayer.style.background;
+			});
 			// switch idle texts every 30 seconds
 			window.setInterval(function() {
 				var amsg = document.getElementById("announcement").innerHTML;
@@ -672,12 +749,7 @@
                                     document.getElementsByClassName("main")[0].style.background = "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))";
                                     document.getElementsByClassName("main")[0].style.height = "25%";
                                 }
-                                // point to the video from the schedule
-								vid.src = "media/special/videos/" + specialactions[i];
-								// set body background to black
-								document.getElementsByTagName('background-image')[0].style.background = 'black';
-								// play the video file
-								vid.play();
+                                playVideo(specialactions[i]);
 							} else {
                                 // in this case the event is an audio track
                                 // first disable background overlay
@@ -688,8 +760,8 @@
 								player.src = "";
 								player.src = "media/special/" + specialactions[i];
 								// show special background
-								document.getElementsByTagName('background-image')[0].style.background = 'url(media/special/' + specialbackgrounds[i] + ') no-repeat center center fixed #6A00FF';
-								document.getElementsByTagName('background-image')[0].style.backgroundSize = 'cover';
+								document.getElementById('background-image').style.background = 'url(media/special/' + specialbackgrounds[i] + ') no-repeat center center fixed #6A00FF';
+								document.getElementById('background-image').style.backgroundSize = 'cover';
 								// play the audio file
 								player.play();
 							}
@@ -711,8 +783,7 @@
                             // if not, set style required for regular music breaks
 							if (playspecial == true) {
 								if (vid.paused) {
-									document.getElementsByTagName('background-image')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
-									document.getElementsByTagName('background-image')[0].style.backgroundSize = 'cover';
+                    				displayBackground(backgrounds, curImgId);
 									document.getElementById("musicbreak").style.display = "block";
 									playspecial = false;
                                     document.getElementsByClassName("main")[0].style.background = "rgba(0, 0, 0, 0.25)";
@@ -789,8 +860,7 @@
 					// if NumPad3 is pressed, play a test video for debugging purposes
                     case 99:
                         if (!playspecial) {
-                            vid.src = "media/special/videos/ertAasta2011.webm";
-                            vid.play();
+                        	playVideo("ertAasta2011.webm");
 							is_bg = false;
                             //player.currentTime = 0;
                             //player.src = "";
@@ -813,9 +883,8 @@
                     // if NumPad2 is pressed, play a test video as background for debugging purposes
 					case 98:
                         if (!playspecial) {
-                            vid.src = "media/special/videos/fireworks.webm";
-                            vid.play();
 							is_bg = true;
+                            playVideo("fireworks.webm");
                             document.getElementById("musicbreak").style.display = "none";
                             playspecial = true;
                         } else {
@@ -829,8 +898,7 @@
                     // if NumPad1 is pressed, play a test video for debugging purposes
                     case 97:
                         if (!playspecial) {
-                            vid.src = "media/special/videos/welcome.webm";
-                            vid.play();
+                        	playVideo("welcome.webm");
 							is_bg = false;
                             //player.currentTime = 0;
                             //player.src = "";
@@ -857,9 +925,8 @@
                             player.src = "";
                             player.src = "media/special/PRG_000.mp3";
                             document.getElementById("music").volume = 0;
-                            document.getElementsByTagName('background-image')[0].style.background = 'url(media/special/special.png) no-repeat center center fixed #6A00FF';
-							document.getElementsByTagName('background-image')[0].style.backgroundSize = 'cover';
-                            document.getElementById("musicbreak").style.display = "none";
+                            displayCustom("media/special/special.png");
+							document.getElementById("musicbreak").style.display = "none";
                             document.getElementsByClassName("main")[0].style.background = "rgba(0, 0, 0, 0)";
                             document.getElementById("songname").innerHTML = "<span style=\"color: yellow\">/// SERVICE TEST </span><span style=\"color: red\">VER 0.02</span><span style=\"color: yellow\"> ///</span>";
                             playspecial = true;
@@ -875,8 +942,7 @@
                             player.paused = true;
                             document.getElementById("songname").innerHTML = "<span style=\"color: yellow\">/// EXIT SERVICE TEST ///</span>";
                             document.getElementById("musicbreak").style.display = "block";
-                            document.getElementsByTagName('background-image')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
-							document.getElementsByTagName('background-image')[0].style.backgroundSize = 'cover';
+                    		displayBackground(backgrounds, curImgId);
 
                         }
                         break;
@@ -896,8 +962,7 @@
                     case 39:
 						if (event.ctrlKey) {
 							curImgId += 1;
-							document.getElementsByTagName('background-image')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
-							document.getElementsByTagName('background-image')[0].style.backgroundSize = 'cover';
+                    		displayBackground(backgrounds, curImgId);
 						} else {
 							player.volume = 0;
 							player.src = "";
@@ -916,8 +981,7 @@
                     case 37:
 						if (event.ctrlKey) {
 							curImgId -= 1;
-							document.getElementsByTagName('background-image')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
-							document.getElementsByTagName('background-image')[0].style.backgroundSize = 'cover';
+                    		displayBackground(backgrounds, curImgId);
 						} else {
 							for (var i = 0; i < songnames.length; i++) {
 								if (songs[i] == playedmusic[plays-1]) {
@@ -1147,9 +1211,9 @@
 					document.getElementById("ui_minutes").innerHTML = "";
 					document.getElementById("ui_hours").innerHTML = "";
 					document.getElementById("musicbreak").style.display = "none";
-					document.getElementsByTagName('background-image')[0].style.backgroundSize = 'contain';
+					document.getElementById('background-image').style.backgroundSize = 'contain';
 				}
 			}
 		</script>
-	</body>
+</body>
 </html>
