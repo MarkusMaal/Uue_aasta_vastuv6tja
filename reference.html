@@ -554,24 +554,26 @@
 			}
 
 			function playVideo(filename) {
-			    let transition = "fadeblack";
-			    let animations = ["fade", "fadeblack", "flash", "zoom", "zoomout", "cover", "sweep", "rotzoom", "rotzoomalt"];
-				if (is_bg) { transition = animations[Math.floor(Math.random() * animations.length)]; }
-				// point to the video from the schedule
-				vid.src = "media/special/videos/" + filename;
-				// set body background to black
-				if (!is_bg) { document.getElementsByTagName('body')[0].style.background = 'black'; }
-				// play the video file
-				vid.play();
-				for (let i = 0; i < animations.length; i++) {
-					document.getElementById('background-image').classList.remove(animations[i]);
+			    if (!vid.src.includes("media/special/videos/" + filename)) {
+                    let transition = "fadeblack";
+                    let animations = ["fade", "fadeblack", "flash", "zoom", "zoomout", "cover", "sweep", "rotzoom", "rotzoomalt"];
+                    if (is_bg) { transition = animations[Math.floor(Math.random() * animations.length)]; }
+                    // point to the video from the schedule
+                    vid.src = "media/special/videos/" + filename;
+                    // set body background to black
+                    if (!is_bg) { document.getElementsByTagName('body')[0].style.background = 'black'; }
+                    // play the video file
+                    vid.play();
+                    for (let i = 0; i < animations.length; i++) {
+                        document.getElementById('background-image').classList.remove(animations[i]);
+                    }
+                    setTimeout(function(){
+                    document.getElementById('background-image').classList.add(transition);
+                    }, 100)
+                    setTimeout(function(){
+                    document.getElementById('background-image').style.display = "none";
+                    }, 1000);
 				}
-				setTimeout(function(){
-				document.getElementById('background-image').classList.add(transition);
-				}, 100)
-				setTimeout(function(){
-				document.getElementById('background-image').style.display = "none";
-				}, 1000);
 			}
 
 			// restore normal music break state
@@ -750,20 +752,19 @@
                                     document.getElementsByClassName("main")[0].style.height = "25%";
                                 }
                                 playVideo(specialactions[i]);
-							} else {
+							} else if(!player.src.includes("media/special/" + specialactions[i])) {
                                 // in this case the event is an audio track
                                 // first disable background overlay
                                 document.getElementsByClassName("main")[0].style.background = "rgba(0, 0, 0, 0)";
                                 // then go to the beginning of the music track, reset the source
                                 // and point the new source to the special event
-								player.currentTime = 0;
-								player.src = "";
-								player.src = "media/special/" + specialactions[i];
-								// show special background
-								document.getElementById('background-image').style.background = 'url(media/special/' + specialbackgrounds[i] + ') no-repeat center center fixed #6A00FF';
-								document.getElementById('background-image').style.backgroundSize = 'cover';
-								// play the audio file
-								player.play();
+                                player.currentTime = 0;
+                                player.src = "";
+                                player.src = "media/special/" + specialactions[i];
+                                // show special background
+                                displayCustom('media/special/' + specialbackgrounds[i]);
+                                // play the audio file
+                                player.play();
 							}
                             // reset music volume (if it was fading in, max the volume)
                             document.getElementById("music").volume = 1;
@@ -837,7 +838,7 @@
 						curday = target[0];
 						curmonth = target[1];
 						pretarget = [curmonth, curday];
-						mid = [today.getHours() + 3, today.getMinutes(), today.getSeconds(), today.getMilliseconds()];
+						mid = [today.getHours() + 3, today.getMinutes(), today.getSeconds() + 2, today.getMilliseconds()];
 						testing = true;
 						newyear = false;
 						break;
