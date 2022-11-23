@@ -1,15 +1,15 @@
-"""
-    uue aasta vastuvõtja 4.1
+'''
+    uue aasta vastuvõtja 5.0
     {} markuse tarkvara
 
     server-side code
 
-    (c) copyright 2022
+    (c) copyright 2021
     licensed under GNU General Public License v3
     (GPL3)
 
     read COPYING for more information
-"""
+'''
 
 #
 # run these commands before attempting to run the script:
@@ -19,18 +19,15 @@
 # pip install waitress
 #
 
-import datetime
-import os
-import subprocess
-import sys
-from random import randint
+import os, datetime, subprocess, sys
 
 from flask import Flask, request, abort, render_template, send_file
 from mutagen.easyid3 import EasyID3
+from random import randint
 
 root = os.getcwd()
 
-version = 4.0
+version = 5.0
 app = Flask(__name__, template_folder=root)
 
 # read config file
@@ -55,7 +52,7 @@ infotext = ""
 # these are displayed above the time till the next year for 30 seconds, each on 30 second intervals
 idletext = []
 # what time of day to count down to
-# number below 24 is a day before countdown date
+# numbers below 24 are a day before countdown date
 # numbers 24 and above are one the countdown date
 # e.g. [24, 0, 0, 0] would be midnight of target date
 # format: [H, M, S, Ms]
@@ -76,6 +73,7 @@ logofile = "jsoftware.png"
 
 # default port number: current year + 1
 serverport = int(datetime.datetime.now().date().strftime("%Y")) + 1
+#serverport = 80
 # host address set to 0.0.0.0, so that other devices can access this site on the local network
 serverhost = "0.0.0.0"
 
@@ -151,23 +149,21 @@ special = []
 songs = []
 backgrounds = []
 
+
 tagline = "Head uut aastat!"
-# subtag = str(int(datetime.datetime.now().date().strftime("%Y")) + 1)
+#subtag = str(int(datetime.datetime.now().date().strftime("%Y")) + 1)
 subtag = str(int(datetime.datetime.now().date().strftime("%Y")))
 towhat = "Uue aastani"
-towhaten = "New Year"
 
 if cdn_type == 1:
     tagline = "Head jõululaupäeva!"
     towhat = "Jõululaupäevani"
-    towhaten = "Christmas Eve"
     subtag = "🎅"
     if janone == [0, -1]:
         janone = [24, 11]
 elif cdn_type == 2:
     tagline = "Häid jõulupühi!"
     towhat = "Jõulupühadeni"
-    towhaten = "Christmas Day"
     subtag = "🎅"
     if janone == [0, -1]:
         janone = [25, 11]
@@ -178,59 +174,49 @@ elif cdn_type == 3:
 elif cdn_type == 4:
     tagline = "Head lipupäeva!"
     towhat = "Lipupäevani"
-    towhaten = "Flag Day"
 elif cdn_type == 5:
     tagline = "Head iseseisvuspäeva!"
     towhat = "Iseseisvuspäevani"
-    towhaten = "Independence Day"
     subtag = str(int(datetime.datetime.now().date().strftime("%Y")) - birthyear)
 elif cdn_type == 6:
     tagline = "Head sõbrapäeva!"
     towhat = "Sõbrapäevani"
-    towhaten = "Valentine Day"
     subtag = "❤️"
     if janone == [0, -1]:
         janone = [14, 1]
 elif cdn_type == 7:
     tagline = "Toredaid kevadpühi!"
     towhat = "Suure reedeni"
-    towhaten = "Big Friday"
     subtag = "🐇"
 elif cdn_type == 8:
     tagline = "Algas kevadine pööripäev!"
     towhat = "Kevadise pööripäevani"
-    towhaten = "Spring Equinox"
     subtag = "🌼"
 elif cdn_type == 9:
     tagline = "Algas talvine pööripäev!"
     towhat = "Talvise pööripäevani"
-    towhaten = "Winter Equinox"
     subtag = "❄️"
 elif cdn_type == 10:
     tagline = "Toredat ja ohutut jaani!"
     towhat = "Jaanipäevani"
-    towhaten = "Midsummer Day"
     subtag = "🔥"
     if janone == [0, -1]:
         janone = [25, 5]
 elif cdn_type == 11:
     tagline = "Head võidupüha!"
     towhat = "Võidupühani"
-    towhaten = "Victory Day"
     subtag = "🇪🇪"
     if janone == [0, -1]:
         janone = [24, 5]
 elif cdn_type == 12:
     tagline = "Head püha Patricku päeva!"
     towhat = "Püha Patricku päevani"
-    towhaten = "St. Patrick Day"
     subtag = "🍀"
     if janone == [0, -1]:
         janone = [17, 2]
 elif cdn_type == 13:
     tagline = "Head usupuhastuspüha!"
     towhat = "Usupuhastuseni"
-    towhaten = "Halloween"
     subtag = "🎃"
     if janone == [0, -1]:
         janone = [31, 9]
@@ -238,14 +224,9 @@ else:
     if janone == [0, -1]:
         janone = [1, 0]
 if janone == [0, -1]:
-    print("Seda tüüpi sündmuse puhul peate käsitsi kuupäeva (ja kellaaja)"
-          "määrama. Muutke faili 'Config.ini' vastavalt.")
-
-
+    print("Seda tüüpi sündmuse puhul peate käsitsi kuupäeva (ja kellaaja) määrama. Muutke faili 'Config.ini' vastavalt.")
 # this finds artist/album info for songs
-
-
-def find_id3(filename):
+def find_ID3(filename):
     try:
         audio = EasyID3("media/songs/" + filename)
     except:
@@ -263,16 +244,13 @@ def find_id3(filename):
                     return audio["artist"][0] + " - " + filename.replace(".mp3", "")
                 except:
                     return filename.replace(".mp3", "")
-    # return "Pala -1"
-
+    return "Pala -1"
 
 def event_column(i, splist, exclude):
     new = []
     for j, event in enumerate(splist):
-        if not j == exclude:
-            new.append(event.split("-")[i])
+        if not j == exclude: new.append(event.split("-")[i])
     return new
-
 
 def reload():
     # load special messages
@@ -295,7 +273,7 @@ def reload():
             # // does not allow repeats
             #
             # you can mix and match each one, but keep in mind
-            # /// gets split and chosen first and then inside
+            # /// gets splitted and chosen first and then inside
             # that we split it by // again (which is why there's
             # 2 if statements instead of if and elif)
             if not sections[i].replace("///", "") == sections[i]:
@@ -307,24 +285,24 @@ def reload():
                 while sections[i] in event_column(i, specialevents, j):
                     sections[i] = splitted_section[randint(0, len(splitted_section) - 1)]
 
+
         isvideo = "false"
         if not sections[3].replace("***", "") == sections[3]:
             isvideo = "background"
         elif not sections[3].replace("**", "") == sections[3]:
             isvideo = "true"
-        special.append(
-            [[sections[0], sections[1], sections[2], "0"], isvideo, sections[3].replace("***", "").replace("**", ""),
-             sections[4], sections[5]])
+        special.append([[sections[0], sections[1], sections[2], "0"], isvideo, sections[3].replace("***", "").replace("**", ""), sections[4], sections[5]])
 
     # load songs and metadata
     songfiles = os.listdir("media/songs")
     for songfile in songfiles:
         if songfile.endswith(".mp3"):
-            songs.append([songfile, find_id3(songfile)])
+            songs.append([songfile, find_ID3(songfile)])
 
     # load background images
     for image in sorted(os.listdir("media/backgrounds")):
-        backgrounds.append(image)
+        if not "desktop.ini" in image:
+            backgrounds.append(image)
 
 
 reload()
@@ -334,16 +312,15 @@ reload()
 @app.route("/", methods=["GET"])
 def index():
     permission = "display: block;"
+    test = "false"
     if "noinput" in request.args:
         permission = "display: none;"
+    if "test" in request.args:
+        test = "true"
     print("------------------")
     print("Veebilehe töötlemine ja saatmine seadmele: " + request.remote_addr)
-    page = render_template("reference.html", permission=permission, msgs=msgs, special=special, songs=songs,
-                           backgrounds=backgrounds, nimg=len(backgrounds), nsong=len(songs), it=infotext,
-                           itt=infotext_title, idletext=idletext, janone=janone, midnight=midnight, logodisp=disp_logo,
-                           logofile=logofile, tagline=tagline, towhat=towhat, towhaten=towhaten, subtag=subtag)
+    page = render_template("reference.html", permission=permission, msgs=msgs, special=special, songs=songs, backgrounds=backgrounds, nimg=len(backgrounds), nsong=len(songs), it=infotext, itt=infotext_title, idletext=idletext, janone=janone, midnight=midnight, logodisp=disp_logo, logofile=logofile, tagline=tagline, towhat=towhat, subtag=subtag, test=test)
     return page
-
 
 # give access to multimedia files, forbid access to anything else
 # supported file formats:
@@ -351,20 +328,13 @@ def index():
 # video: mp4, webm
 # images: png, jpeg, svg, webp
 # other: ico
-
-
 @app.route("/<path:req_path>")
 def file(req_path):
     abs_path = os.path.join(root, req_path)
     if not os.path.exists(abs_path):
         print("Ei leitud: " + abs_path.replace(root, ""))
         return abort(404)
-    if os.path.isfile(abs_path) and abs_path.lower().endswith(".mp3") or abs_path.lower().endswith(
-            ".png") or abs_path.lower().endswith(".jpeg") or abs_path.lower().endswith(
-            ".ico") or abs_path.lower().endswith(".jpg") or abs_path.lower().endswith(
-            ".gif") or abs_path.lower().endswith(".jpe") or abs_path.lower().endswith(
-            ".bmp") or abs_path.lower().endswith(".svg") or abs_path.lower().endswith(
-            ".webm") or abs_path.lower().endswith(".mp4") or abs_path.lower().endswith(".webp"):
+    if os.path.isfile(abs_path) and abs_path.lower().endswith(".mp3") or abs_path.lower().endswith(".png") or abs_path.lower().endswith(".jpeg") or abs_path.lower().endswith(".ico") or abs_path.lower().endswith(".jpg") or abs_path.lower().endswith(".gif") or abs_path.lower().endswith(".jpe") or abs_path.lower().endswith(".bmp") or abs_path.lower().endswith(".svg") or abs_path.lower().endswith(".webm") or abs_path.lower().endswith(".mp4") or abs_path.lower().endswith(".webp"):
         if abs_path.lower().endswith("stopfail.png") and is_live:
             subprocess.call([r'C:\mas\end_stream.bat'])
             print("Otseülekanne lõpetati. Sulge server...")
@@ -374,23 +344,19 @@ def file(req_path):
     else:
         print("Juurdepääs keelatud: " + abs_path.replace(root, ""))
         return abort(403)
-    # return render_page_string(out)
-
+    return render_page_string(out)
 
 @app.errorhandler(404)
-def notfound_error():
+def notfound_error(e):
     return render_template("errors/404.html"), 404
 
-
 @app.errorhandler(403)
-def forbidden_error():
+def forbidden_error(e):
     return render_template("errors/403.html"), 403
-
 
 if __name__ == "__main__":
     print("     --- Uue aasta vastuvõtja " + str(version) + " ---     ")
     from waitress import serve
-
     print("Juurkaust: " + root)
     print("Edastamine veebiaadressile: http://" + serverhost + ":" + str(serverport) + "/")
     print("Kohalik veebiaadress: http://127.0.0.1:" + str(serverport) + "/")

@@ -1,6 +1,6 @@
  
  
-Uue aasta vastuvõtja 3.1
+Uue aasta vastuvõtja 5.0
 {} markuse tarkvara
 
 Tarkvarale kehtib GPLv3 litsents, mis võimaldab teil
