@@ -22,9 +22,22 @@
 				font-family: "Segoe UI";
 				color: #fff;
 			}
+			
+			.background-image {
+				position: absolute;
+				z-index: -99;
+				background: black;
+				animation-name: move;
+				animation-duration: 10s;
+			}
+
+			@keyframes move {
+				from { transform: scale(1); }
+				to { transform: scale(1.2); }
+			}
 
 			/* set position for the music break text */
-			div.musicbreak {
+			.musicbreak {
 				position: fixed;
 				bottom: 5%;
 				display: flex;
@@ -34,7 +47,7 @@
 				justify-content: center;
 			}
 
-			div.musicbreak #breakdetails {
+			.musicbreak #breakdetails {
 				display: inline-block;
 				width: 50%;
 			}
@@ -108,6 +121,7 @@
 				height: 100%;
 				top: 0px;
 				left: 0px;
+
 			}
 
 			img.logo {
@@ -406,39 +420,41 @@
 	</head>
 	<body>
 		<!-- teh front end HTML -->
-		<div class="main">
-		<h2 id="songname" class="sn">Vajutage P, et anda luba multimeedia esitamiseks</h2>
-		<h2 id="ctime" class="timestamp"></h2>
-		<div class="contains">
-		<h1 id="announcement">{{towhat}} on jäänud</h1>
-		<h1 id="countdown" class="timetillnewyear"></h1>
-		<table class="centrum">
-		<tr>
-		<td id="ui_days">päeva</td>
-		<td id="ui_hours">tundi</td>
-		<td id="ui_minutes">minutit</td>
-		<td id="ui_seconds">sekundit</td>
-		</tr>
-		</table>
-		</div>
-		<a href="#" onclick='document.getElementById("permission").style.display = "none";' id="permission" style="{{permission}}"></a>
-		<audio id="music" src="">
-		</audio>
-		<div id="wrapper-video">
-		<video id="myvideo" src="">
-		</video>
-		</div>
-		<div class="musicbreak" id="musicbreak">
-			<div>
-				<h3 id="breaktitle">{{itt}}</h3>
+		<div class="background-image">
+			<div class="main">
+				<h2 id="songname" class="sn">Vajutage P, et anda luba multimeedia esitamiseks</h2>
+				<h2 id="ctime" class="timestamp"></h2>
+				<div class="contains">
+				<h1 id="announcement">{{towhat}} on jäänud</h1>
+				<h1 id="countdown" class="timetillnewyear"></h1>
+				<table class="centrum">
+				<tr>
+				<td id="ui_days">päeva</td>
+				<td id="ui_hours">tundi</td>
+				<td id="ui_minutes">minutit</td>
+				<td id="ui_seconds">sekundit</td>
+				</tr>
+				</table>
+				</div>
+				<a href="#" onclick='document.getElementById("permission").style.display = "none";' id="permission" style="{{permission}}"></a>
+				<audio id="music" src="">
+				</audio>
+				<div id="wrapper-video">
+				<video id="myvideo" src="">
+				</video>
+				</div>
+				<div class="musicbreak" id="musicbreak">
+					<div>
+						<h3 id="breaktitle">{{itt}}</h3>
+					</div>
+					<div>
+						<p id="breakdetails">{{it}}</p>
+					</div>
+				</div>
+				<!-- custom logo -->
+				<img class="logo" src="media/{{logofile}}">
+				<!-- end of teh front end HTML -->
 			</div>
-			<div>
-				<p id="breakdetails">{{it}}</p>
-			</div>
-		</div>
-		<!-- custom logo -->
-		<img class="logo" src="media/{{logofile}}">
-		<!-- end of teh front end HTML -->
         </div>
 		<script>
 			// mute and pause audio (this gets executed right after the page is loaded by the
@@ -501,20 +517,20 @@
 					document.getElementById('myvideo').currentTime = 0;
                     document.getElementsByClassName("main")[0].style.background = "rgba(0, 0, 0, 0.25)";
                     document.getElementsByClassName("main")[0].style.height = "100%";
-					document.getElementsByTagName('body')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
-					document.getElementsByTagName('body')[0].style.backgroundSize = 'cover';
+					document.getElementsByTagName('background-image')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
+					document.getElementsByTagName('background-image')[0].style.backgroundSize = 'cover';
 			}
 			// set background image
-			document.getElementsByTagName('body')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
-			document.getElementsByTagName('body')[0].style.backgroundSize = 'cover';
+			document.getElementsByTagName('background-image')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
+			document.getElementsByTagName('background-image')[0].style.backgroundSize = 'cover';
 
 			// display black translucent background if no special events are triggered
 			// also switch the background image every minute (change 60 to something else
 			// to change the interval)
 			window.setInterval(function() {
 				if (playspecial == false) {
-					document.getElementsByTagName('body')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
-					document.getElementsByTagName('body')[0].style.backgroundSize = 'cover';
+					document.getElementsByTagName('background-image')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
+					document.getElementsByTagName('background-image')[0].style.backgroundSize = 'cover';
 				}
 				curImgId = Math.floor(Math.random() * numberOfImages);
 			}, 60 * 1000);
@@ -659,7 +675,7 @@
                                 // point to the video from the schedule
 								vid.src = "media/special/videos/" + specialactions[i];
 								// set body background to black
-								document.getElementsByTagName('body')[0].style.background = 'black';
+								document.getElementsByTagName('background-image')[0].style.background = 'black';
 								// play the video file
 								vid.play();
 							} else {
@@ -672,8 +688,8 @@
 								player.src = "";
 								player.src = "media/special/" + specialactions[i];
 								// show special background
-								document.getElementsByTagName('body')[0].style.background = 'url(media/special/' + specialbackgrounds[i] + ') no-repeat center center fixed #6A00FF';
-								document.getElementsByTagName('body')[0].style.backgroundSize = 'cover';
+								document.getElementsByTagName('background-image')[0].style.background = 'url(media/special/' + specialbackgrounds[i] + ') no-repeat center center fixed #6A00FF';
+								document.getElementsByTagName('background-image')[0].style.backgroundSize = 'cover';
 								// play the audio file
 								player.play();
 							}
@@ -695,8 +711,8 @@
                             // if not, set style required for regular music breaks
 							if (playspecial == true) {
 								if (vid.paused) {
-									document.getElementsByTagName('body')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
-									document.getElementsByTagName('body')[0].style.backgroundSize = 'cover';
+									document.getElementsByTagName('background-image')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
+									document.getElementsByTagName('background-image')[0].style.backgroundSize = 'cover';
 									document.getElementById("musicbreak").style.display = "block";
 									playspecial = false;
                                     document.getElementsByClassName("main")[0].style.background = "rgba(0, 0, 0, 0.25)";
@@ -841,8 +857,8 @@
                             player.src = "";
                             player.src = "media/special/PRG_000.mp3";
                             document.getElementById("music").volume = 0;
-                            document.getElementsByTagName('body')[0].style.background = 'url(media/special/special.png) no-repeat center center fixed #6A00FF';
-							document.getElementsByTagName('body')[0].style.backgroundSize = 'cover';
+                            document.getElementsByTagName('background-image')[0].style.background = 'url(media/special/special.png) no-repeat center center fixed #6A00FF';
+							document.getElementsByTagName('background-image')[0].style.backgroundSize = 'cover';
                             document.getElementById("musicbreak").style.display = "none";
                             document.getElementsByClassName("main")[0].style.background = "rgba(0, 0, 0, 0)";
                             document.getElementById("songname").innerHTML = "<span style=\"color: yellow\">/// SERVICE TEST </span><span style=\"color: red\">VER 0.02</span><span style=\"color: yellow\"> ///</span>";
@@ -859,8 +875,8 @@
                             player.paused = true;
                             document.getElementById("songname").innerHTML = "<span style=\"color: yellow\">/// EXIT SERVICE TEST ///</span>";
                             document.getElementById("musicbreak").style.display = "block";
-                            document.getElementsByTagName('body')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
-							document.getElementsByTagName('body')[0].style.backgroundSize = 'cover';
+                            document.getElementsByTagName('background-image')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
+							document.getElementsByTagName('background-image')[0].style.backgroundSize = 'cover';
 
                         }
                         break;
@@ -880,8 +896,8 @@
                     case 39:
 						if (event.ctrlKey) {
 							curImgId += 1;
-							document.getElementsByTagName('body')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
-							document.getElementsByTagName('body')[0].style.backgroundSize = 'cover';
+							document.getElementsByTagName('background-image')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
+							document.getElementsByTagName('background-image')[0].style.backgroundSize = 'cover';
 						} else {
 							player.volume = 0;
 							player.src = "";
@@ -900,8 +916,8 @@
                     case 37:
 						if (event.ctrlKey) {
 							curImgId -= 1;
-							document.getElementsByTagName('body')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
-							document.getElementsByTagName('body')[0].style.backgroundSize = 'cover';
+							document.getElementsByTagName('background-image')[0].style.background = 'url(' + backgrounds[curImgId] + ') no-repeat center center fixed black';
+							document.getElementsByTagName('background-image')[0].style.backgroundSize = 'cover';
 						} else {
 							for (var i = 0; i < songnames.length; i++) {
 								if (songs[i] == playedmusic[plays-1]) {
@@ -1131,7 +1147,7 @@
 					document.getElementById("ui_minutes").innerHTML = "";
 					document.getElementById("ui_hours").innerHTML = "";
 					document.getElementById("musicbreak").style.display = "none";
-					document.getElementsByTagName('body')[0].style.backgroundSize = 'contain';
+					document.getElementsByTagName('background-image')[0].style.backgroundSize = 'contain';
 				}
 			}
 		</script>
