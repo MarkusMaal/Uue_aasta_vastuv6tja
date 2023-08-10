@@ -19,11 +19,13 @@
 # pip install waitress
 #
 
+print("Sõltuvuste ettevalmistamine...")
 import os, datetime, subprocess, sys
 
 from flask import Flask, request, abort, render_template, send_file
 from mutagen.easyid3 import EasyID3
 from random import randint
+
 
 root = os.getcwd()
 
@@ -261,7 +263,7 @@ def reload():
         if not sections[3].replace("//", "") == sections[3]:
             splitted_section = sections[3].split("//")
             sections[3] = splitted_section[randint(0, len(splitted_section) - 1)]
-        msgs.append([[sections[0], sections[1], sections[2], "0"], sections[3]])
+        msgs.append([[sections[0], sections[1], sections[2], "0"], sections[3].replace("_dash_", "-")])
 
     # load special events
     specialevents = open("media/specialevents.txt", "r", encoding="UTF-8").read().strip().split(";")
@@ -291,7 +293,7 @@ def reload():
             isvideo = "background"
         elif not sections[3].replace("**", "") == sections[3]:
             isvideo = "true"
-        special.append([[sections[0], sections[1], sections[2], "0"], isvideo, sections[3].replace("***", "").replace("**", ""), sections[4], sections[5]])
+        special.append([[sections[0], sections[1], sections[2], "0"], isvideo, sections[3].replace("***", "").replace("**", ""), sections[4].replace("_dash_", "-"), sections[5]])
 
     # load songs and metadata
     songfiles = os.listdir("media/songs")
@@ -355,12 +357,16 @@ def forbidden_error(e):
     return render_template("errors/403.html"), 403
 
 if __name__ == "__main__":
-    print("     --- Uue aasta vastuvõtja " + str(version) + " ---     ")
+    print("          --- Uue aasta vastuvõtja " + str(version) + " ---     ")
     from waitress import serve
     print("Juurkaust: " + root)
     print("Edastamine veebiaadressile: http://" + serverhost + ":" + str(serverport) + "/")
     print("Kohalik veebiaadress: http://127.0.0.1:" + str(serverport) + "/")
     print("Serveri sulgemiseks vajutage Ctrl + C")
+    if os.name == "nt":
+        print("Tuum: " + str(os.system("Reg Query 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion' /v ReleaseId")).strip())
+    else:
+        print("Tuum: " + os.popen("uname -sr").read().strip())
     print("\n------------------\nLogi:")
     serve(app, host=serverhost, port=serverport)
     print("\nHead aega!\n")

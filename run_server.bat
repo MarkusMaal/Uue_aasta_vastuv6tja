@@ -2,7 +2,7 @@
 :: see skript otsib arvutist Pythoni ja käivitab
 :: serveri
 setlocal EnableDelayedExpansion
-for /f %%p in ('where python') do SET PYTHONPATH=%%p
+for /f "delims=" %%p in ('where python') do SET PYTHONPATH=%%p
 if "!PYTHONPATH!"=="" (
 echo.
 echo Python pole arvutisse paigaldatud^^!

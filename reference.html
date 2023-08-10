@@ -136,6 +136,133 @@
 				font-size: 70px;
 				margin-bottom: -40px;
 			}
+			
+			h1.timetillnewyear, .centrum, #announcement, body {
+				animation-name: shade;
+				animation-duration: 15s;
+				animation-iteration-count: infinite;
+				-moz-animation-iteration-count: infinite;
+				-webkit-animation-iteration-count: infinite;
+				-o-animation-iteration-count: infinite;
+			}
+			
+			/* h1.timetillnewyear, .centrum, #announcement, body {
+				text-shadow: 0px 0px 5px #000, 0px 0px 10px #000, 0px 0px 15px #000, 0px 0px 20px #000;
+			} */
+			
+			@keyframes shade {
+				0% {
+					text-shadow: 0px 0px 5px #0000, 0px 0px 10px #0000, 0px 0px 15px #000f, 0px 0px 20px #000f;
+				}
+				20% {
+					text-shadow: 0px 0px 5px #000f, 0px 0px 10px #0000, 0px 0px 15px #000f, 0px 0px 20px #000f;
+				}
+				40% {
+					text-shadow: 0px 0px 5px #000f, 0px 0px 10px #000f, 0px 0px 15px #0000, 0px 0px 20px #000f;
+				}
+				60% {
+					text-shadow: 0px 0px 5px #000f, 0px 0px 10px #000f, 0px 0px 15px #000f, 0px 0px 20px #0000;
+				}
+				80% {
+					text-shadow: 0px 0px 5px #0000, 0px 0px 10px #000f, 0px 0px 15px #000f, 0px 0px 20px #000f;
+				}
+				100% {
+					text-shadow: 0px 0px 5px #0000, 0px 0px 10px #0000, 0px 0px 15px #000f, 0px 0px 20px #000f;
+				}
+			}
+			
+			@keyframes rainbow {
+				0% {
+					color: #eff;
+					text-shadow: 0px 0px 10px #f00;
+				}
+				17% {
+					color: #ffe;
+					text-shadow: 0px 0px 10px #f0f;
+				}
+				34% {
+					color: #efe;
+					text-shadow: 0px 0px 10px #00f;
+				}
+				51% {
+					color: #e77;
+					text-shadow: 0px 0px 10px #0ff;
+				}
+				68% {
+					color: #eef;
+					text-shadow: 0px 0px 10px #0f0;
+				}
+				85% {
+					color: #fef;
+					text-shadow: 0px 0px 10px #ff0;
+				}
+				100% {
+					color: #eff;
+					text-shadow: 0px 0px 10px #f00;
+				}
+			}
+			
+			.rem.t59 { color: #ff0000; }
+			.rem.t58 { color: #ff001c; }
+			.rem.t57 { color: #ff0039; }
+			.rem.t56 { color: #ff0055; }
+			.rem.t55 { color: #ff0071; }
+			.rem.t54 { color: #ff008e; }
+			.rem.t53 { color: #ff00aa; }
+			.rem.t52 { color: #ff00c6; }
+			.rem.t51 { color: #ff00e3; }
+			.rem.t50 { color: #ff00ff; }
+			.rem.t49 { color: #ff00ff; }
+			.rem.t48 { color: #e300ff; }
+			.rem.t47 { color: #c600ff; }
+			.rem.t46 { color: #aa00ff; }
+			.rem.t45 { color: #8e00ff; }
+			.rem.t44 { color: #7100ff; }
+			.rem.t43 { color: #5500ff; }
+			.rem.t42 { color: #3900ff; }
+			.rem.t41 { color: #1c00ff; }
+			.rem.t40 { color: #0000ff; }
+			.rem.t39 { color: #0000ff; }
+			.rem.t38 { color: #001cff; }
+			.rem.t37 { color: #0039ff; }
+			.rem.t36 { color: #0055ff; }
+			.rem.t35 { color: #0071ff; }
+			.rem.t34 { color: #008eff; }
+			.rem.t33 { color: #00aaff; }
+			.rem.t32 { color: #00c6ff; }
+			.rem.t31 { color: #00e3ff; }
+			.rem.t30 { color: #00ffff; }
+			.rem.t29 { color: #00ffff; }
+			.rem.t28 { color: #00ffe3; }
+			.rem.t27 { color: #00ffc6; }
+			.rem.t26 { color: #00ffaa; }
+			.rem.t25 { color: #00ff8e; }
+			.rem.t24 { color: #00ff71; }
+			.rem.t23 { color: #00ff55; }
+			.rem.t22 { color: #00ff39; }
+			.rem.t21 { color: #00ff1c; }
+			.rem.t20 { color: #00ff00; }
+			.rem.t19 { color: #00ff00; }
+			.rem.t18 { color: #1cff00; }
+			.rem.t17 { color: #39ff00; }
+			.rem.t16 { color: #55ff00; }
+			.rem.t15 { color: #71ff00; }
+			.rem.t14 { color: #8eff00; }
+			.rem.t13 { color: #aaff00; }
+			.rem.t12 { color: #c6ff00; }
+			.rem.t11 { color: #e3ff00; }
+			.rem.t10 { color: #ffff00; }
+			.rem.t09 { color: #ffff00; }
+			.rem.t08 { color: #ffe300; }
+			.rem.t07 { color: #ffc600; }
+			.rem.t06 { color: #ffaa00; }
+			.rem.t05 { color: #ff8e00; }
+			.rem.t04 { color: #ff7100; }
+			.rem.t03 { color: #ff5500; }
+			.rem.t02 { color: #ff3900; }
+			.rem.t01 { color: #ff1c00; }
+			.rem.t00 { color: #ff0000; }
+			
 			/* center the time till next year using flexboxes */
 			.contains {
 				display: flex; justify-content: center; align-items: center;
@@ -415,7 +542,8 @@
 			let testing = {{test}};
 
 			if (testing) {
-				today = new Date(new Date().getTime() + 5 * 60000);
+				//today = new Date(new Date().getTime() + 5 * 60000);
+				today = new Date(new Date().getTime());
 				target = [today.getMonth(), today.getDate()];
 				curday = target[0];
 				curmonth = target[1];
@@ -516,10 +644,11 @@
 					if (playspecial && !is_bg) {
 						// this makes sure that if the special programme is a video, the gradient effect gets displayed
 						// when turning on the UI
-						if (document.getElementById("ui_days").innerHTML == "")
+						/*if (document.getElementById("ui_days").innerHTML == "")
 						{
 							document.getElementsByClassName("main")[0].style.background = "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))";
-						}
+						}*/
+						document.getElementsByClassName("main")[0].style.background = "transparent";
 					} else {
 						document.getElementsByClassName("main")[0].style.background = "rgba(0, 0, 0, 0.25)";
 					}
@@ -748,8 +877,9 @@
                                 {
 									clearInterval(timer3);
 									timer3 = setInterval(topright, 12);
-                                    document.getElementsByClassName("main")[0].style.background = "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))";
-                                    document.getElementsByClassName("main")[0].style.height = "25%";
+                                    //document.getElementsByClassName("main")[0].style.background = "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))";
+                                    //document.getElementsByClassName("main")[0].style.height = "25%";
+									document.getElementsByClassName("main")[0].style.background = "transparent";
                                 }
                                 playVideo(specialactions[i]);
 							} else if(!player.src.includes("media/special/" + specialactions[i])) {
@@ -833,7 +963,7 @@
 
 					// if NumPad7 is pressed, test whole stream
 					case 103:
-						today = new Date(new Date().getTime() + 5 * 60000);
+						today = new Date(new Date().getTime());
 						target = [today.getMonth(), today.getDate()];
 						curday = target[0];
 						curmonth = target[1];
@@ -861,13 +991,14 @@
 					// if NumPad3 is pressed, play a test video for debugging purposes
                     case 99:
                         if (!playspecial) {
-                        	playVideo("ertAasta2011.webm");
+                        	playVideo("cutclips.mp4");
 							is_bg = false;
                             //player.currentTime = 0;
                             //player.src = "";
                             //document.getElementById("music").volume = 0;
                             document.getElementById("musicbreak").style.display = "none";
-                            document.getElementsByClassName("main")[0].style.background = "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))";
+                            //document.getElementsByClassName("main")[0].style.background = "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))";
+							document.getElementsByClassName("main")[0].style.background = "transparent";
                             document.getElementsByClassName("main")[0].style.height = "25%";
                             document.getElementById("songname").innerHTML = "<span style=\"color: yellow\">/// SERVICE TEST </span><span style=\"color: red\">VER 0.02</span><span style=\"color: yellow\"> ///</span>";
                             document.getElementById('main').style.backgroundSize = 'contain';
@@ -899,13 +1030,14 @@
                     // if NumPad1 is pressed, play a test video for debugging purposes
                     case 97:
                         if (!playspecial) {
-                        	playVideo("welcome.webm");
+                        	playVideo("welcome.mp4");
 							is_bg = false;
                             //player.currentTime = 0;
                             //player.src = "";
                             //document.getElementById("music").volume = 0;
                             document.getElementById("musicbreak").style.display = "none";
-                            document.getElementsByClassName("main")[0].style.background = "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))";
+                            //document.getElementsByClassName("main")[0].style.background = "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))";
+							document.getElementsByClassName("main")[0].style.background = "transparent";
                             document.getElementsByClassName("main")[0].style.height = "25%";
                             document.getElementById("songname").innerHTML = "<span style=\"color: yellow\">/// SERVICE TEST </span><span style=\"color: red\">VER 0.02</span><span style=\"color: yellow\"> ///</span>";
                             document.getElementById('main').style.backgroundSize = 'contain';
@@ -1174,12 +1306,12 @@
 					// hide certain counters if they are "00"
 					// adjust margins if neccesary
 					if (days == "00") {
-						document.getElementById("countdown").innerHTML = shrs + " " + smins + " " + ssecs;
+						document.getElementById("countdown").innerHTML = `<span class="rem t${shrs}">${shrs}</span>&nbsp;<span class="rem t${smins}">${smins}</span>&nbsp;<span class="rem t${ssecs}">${ssecs}</span>`;
 						if (shrs == "00") {
 							document.getElementsByTagName("table")[0].style.marginLeft = 0;
-							document.getElementById("countdown").innerHTML = smins + " " + ssecs;
+							document.getElementById("countdown").innerHTML = `<span class="rem t${smins}">${smins}</span>&nbsp;<span class="rem t${ssecs}">${ssecs}</span>`;
 							if (smins == "00") {
-								document.getElementById("countdown").innerHTML = ssecs;
+								document.getElementById("countdown").innerHTML = `<span class="rem t${ssecs}">${ssecs}</span>`;
 								document.getElementById("ui_minutes").style.display = "none";
 							}
 							document.getElementById("ui_hours").style.display = "none";
@@ -1187,7 +1319,8 @@
 						document.getElementById("ui_days").style.display = "none";
 					} else {
 						// display all counters if nothing is "00"
-						document.getElementById("countdown").innerHTML = days + " " + shrs + " " + smins + " " + ssecs;
+						document.getElementById("countdown").innerHTML = `<span class="rem t${days}">${days}</span>&nbsp;<span class="rem t${shrs}">${shrs}</span>&nbsp;<span class="rem t${smins}">${smins}</span>&nbsp;<span class="rem t${ssecs}">${ssecs}</span>`;
+
 					}
 				}
 				if (document.getElementById("myvideo").paused || is_bg) {
